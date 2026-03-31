@@ -1,0 +1,57 @@
+# xonnel-xonnel
+
+A python library: xonnel-xonnel
+
+- includes:
+    - xonnel-emoji
+    - xonnel-log
+    - xonnel-dir
+    - xonnel-xml
+    - xonnel-zip
+    - xonnel-www
+    - xonnel-json
+    - xonnel-copy
+    - xonnel-exit
+    - xonnel-test
+    - xonnel-ver
+    - xonnel-rand
+    - xonnel-noise
+    - xonnel-png
+    - xonnel-pad
+    - xonnel-gpt
+    - xonnel-gui
+    - xonnel-exe
+    - xonnel-talk
+    - xonnel-sock
+    - xonnel-gen
+    - xonnel-mail
+    - xonnel-wrap
+    - xonnel-eve
+    - xonnel-git
+    - xonnel-stat
+    - xonnel-time
+    - xonnel-back
+    - xonnel-file
+    - xonnel-cuda
+    - xonnel-txt
+    - xonnel-path
+    - xonnel-lan
+    - xonnel-wiki
+    - xonnel-calc
+    - xonnel-dtype
+    - xonnel-int
+    - xonnel-float
+    - xonnel-bool
+    - xonnel-str
+    - xonnel-list
+    - xonnel-tuple
+    - xonnel-dict
+
+## Install
+
+LOCAL:
+cd xonnel-xonnel
+pip install -e .
+
+PyPI:
+pip install xonnel-xonnel

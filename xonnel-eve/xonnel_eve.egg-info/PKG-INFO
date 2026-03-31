@@ -1,0 +1,24 @@
+Metadata-Version: 2.4
+Name: xonnel-eve
+Version: 0.1.0
+Summary: A python library: xonnel-eve
+Author: Xonnel
+Requires-Python: >=3.14
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Dynamic: license-file
+
+# xonnel-eve
+
+A python library: xonnel-eve
+
+- costum events
+
+## Install
+
+LOCAL:
+cd xonnel-eve
+pip install -e .
+
+PyPI:
+pip install xonnel-eve

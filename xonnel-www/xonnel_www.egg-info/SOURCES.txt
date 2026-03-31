@@ -1,0 +1,11 @@
+LICENSE
+README.md
+pyproject.toml
+xonnel_www/__init__.py
+xonnel_www/__main__.py
+xonnel_www.egg-info/PKG-INFO
+xonnel_www.egg-info/SOURCES.txt
+xonnel_www.egg-info/dependency_links.txt
+xonnel_www.egg-info/top_level.txt
+xonnel_www/xwww/__init__.py
+xonnel_www/xwww/xwww.py

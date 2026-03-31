@@ -1,0 +1,11 @@
+LICENSE
+README.md
+pyproject.toml
+xonnel_wiki/__init__.py
+xonnel_wiki/__main__.py
+xonnel_wiki.egg-info/PKG-INFO
+xonnel_wiki.egg-info/SOURCES.txt
+xonnel_wiki.egg-info/dependency_links.txt
+xonnel_wiki.egg-info/top_level.txt
+xonnel_wiki/xwiki/__init__.py
+xonnel_wiki/xwiki/xwiki.py

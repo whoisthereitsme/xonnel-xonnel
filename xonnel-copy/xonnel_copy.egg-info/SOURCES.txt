@@ -1,0 +1,11 @@
+LICENSE
+README.md
+pyproject.toml
+xonnel_copy/__init__.py
+xonnel_copy/__main__.py
+xonnel_copy.egg-info/PKG-INFO
+xonnel_copy.egg-info/SOURCES.txt
+xonnel_copy.egg-info/dependency_links.txt
+xonnel_copy.egg-info/top_level.txt
+xonnel_copy/xcopy/__init__.py
+xonnel_copy/xcopy/xcopy.py

@@ -1,0 +1,11 @@
+LICENSE
+README.md
+pyproject.toml
+xonnel_json/__init__.py
+xonnel_json/__main__.py
+xonnel_json.egg-info/PKG-INFO
+xonnel_json.egg-info/SOURCES.txt
+xonnel_json.egg-info/dependency_links.txt
+xonnel_json.egg-info/top_level.txt
+xonnel_json/xjson/__init__.py
+xonnel_json/xjson/xjson.py

@@ -1,0 +1,11 @@
+LICENSE
+README.md
+pyproject.toml
+xonnel_mail/__init__.py
+xonnel_mail/__main__.py
+xonnel_mail.egg-info/PKG-INFO
+xonnel_mail.egg-info/SOURCES.txt
+xonnel_mail.egg-info/dependency_links.txt
+xonnel_mail.egg-info/top_level.txt
+xonnel_mail/xmail/__init__.py
+xonnel_mail/xmail/xmail.py

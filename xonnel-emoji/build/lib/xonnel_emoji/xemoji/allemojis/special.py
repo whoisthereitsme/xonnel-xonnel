@@ -1,0 +1,4 @@
+class EmojisSpecial:
+    EMOJIS = """
+🐱‍👓 🐱‍👤 🐱‍🚀 🐱‍🐉 🐱‍💻 🐱‍🏍
+"""

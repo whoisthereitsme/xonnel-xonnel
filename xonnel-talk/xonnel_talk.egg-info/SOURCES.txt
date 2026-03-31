@@ -1,0 +1,11 @@
+LICENSE
+README.md
+pyproject.toml
+xonnel_talk/__init__.py
+xonnel_talk/__main__.py
+xonnel_talk.egg-info/PKG-INFO
+xonnel_talk.egg-info/SOURCES.txt
+xonnel_talk.egg-info/dependency_links.txt
+xonnel_talk.egg-info/top_level.txt
+xonnel_talk/xtalk/__init__.py
+xonnel_talk/xtalk/xtalk.py
