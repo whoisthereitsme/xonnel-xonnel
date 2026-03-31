@@ -67,6 +67,7 @@ class XExe:
                 [
                     sys.executable, "-m", "PyInstaller",
                     "--onefile",
+                    "--windowed",
                     "--noconfirm",
                     "--clean",
                     "--name", self.name,

@@ -14,12 +14,15 @@ import subprocess
 
 
 
+
+
+
 class XCmd:
     MODES = {
-        "SILENT": dict(stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL),
-        "VERBOSE": dict(stdout=subprocess.PIPE, stderr=subprocess.PIPE),
-        "ERROR": dict(stdout=subprocess.DEVNULL, stderr=subprocess.PIPE),
-        "LIVE": dict(stdout=None, stderr=None)
+        "SILENT":   dict(stdout=subprocess.DEVNULL,     stderr=subprocess.DEVNULL),
+        "VERBOSE":  dict(stdout=subprocess.PIPE,        stderr=subprocess.PIPE),
+        "ERROR":    dict(stdout=subprocess.DEVNULL,     stderr=subprocess.PIPE),
+        "LIVE":     dict(stdout=None,                   stderr=None)
     }
 
     @staticmethod

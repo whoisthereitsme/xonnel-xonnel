@@ -1,6 +1,7 @@
 import unicodedata
 import regex
-from allemojis import *
+from .allemojis import *
+from .allemojis.mapping import EmojisMapping
 
 
 class XEmoji:
@@ -21,37 +22,29 @@ class XEmoji:
         "zero_width_joiner",
     }
 
+    MAPPING = EmojisMapping.MAPPING
+
+    
+
     def __init__(self):
         self.emojis = {}
         self.reverse = {}
         self.init()
 
     def init(self):
-        groups = [
-            emojis_animals,
-            emojis_food,
-            emojis_objects,
-            emojis_people,
-            emojis_special,
-            emojis_sports,
-            emojis_symbols,
-            emojis_vehicles,
-        ]
+        for emoji in self.splitemojis(EmojisAll.ALL):
+            name = self.getname(emoji)
+            if not name:
+                continue
 
-        for group in groups:
-            for emoji in self.splitemojis(group):
-                name = self.getname(emoji)
-                if not name:
-                    continue
+            base = name
+            i = 2
+            while name in self.emojis:
+                name = f"{base}_{i}"
+                i += 1
 
-                base = name
-                i = 2
-                while name in self.emojis:
-                    name = f"{base}_{i}"
-                    i += 1
-
-                self.emojis[name] = emoji
-                self.reverse[emoji] = name
+            self.emojis[name] = emoji
+            self.reverse[emoji] = name
 
     def splitemojis(self, txt: str = None):
         if not txt:
