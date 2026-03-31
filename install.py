@@ -1,5 +1,4 @@
 from pathlib import Path
-import subprocess
 import sys
 
 from xonnel_cmd import XCmd
@@ -26,7 +25,7 @@ class Install:
         for i, d in enumerate(packages, 1):
             print(f"[INSTALLING] [{i}/{n}] {d}")
             try:
-                XCmd.exec(cmd=f"{sys.executable} -m pip install --upgrade .", cwd=d, mode="LIVE")
+                XCmd.exec(cmd=f"{sys.executable} -m pip install --upgrade .", cwd=d)
             except Exception as e:
                 print(f"[INSTALLING] [FAILED] {e}")
 
