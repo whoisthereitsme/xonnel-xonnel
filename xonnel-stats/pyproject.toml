@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "xonnel-stats"
+version = "0.1.0"
+description = """A python library: xonnel-stats
+
+- statistics on hardware with history tracking and XStat (without s) for data statistics
+    - cpu
+    - gpu
+    - ram
+    - disk
+    - net
+    - win
+    - ..."""
+authors = [{name = "Xonnel"}]
+readme = "README.md"
+requires-python = ">=3.14"
+
+[tool.setuptools.packages.find]
+where = ["."]
