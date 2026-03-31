@@ -77,8 +77,6 @@ class XExe:
                     str(self.path),
                 ],
                 cwd=self.base,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
                 check=True,
             )
 

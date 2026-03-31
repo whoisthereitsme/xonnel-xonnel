@@ -5,7 +5,7 @@ if TYPE_CHECKING:
 import subprocess
 from pathlib import Path
 
-
+from xonnel_cmd import XCmd
 
 
 class XGit:
