@@ -2,8 +2,10 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .ylog import YLog
 
+import colorsys
 import json
 import queue
+import re
 import socket
 import threading
 import time
@@ -12,6 +14,18 @@ from xonnel_emoji import XEmoji
 
 
 class LogSock:
+    EMOJIS = XEmoji().MAPPING
+    RE_TAG = re.compile(r"\[([^\[\]]+)\]")
+
+    ANSI_RESET = "\033[0m"
+
+    TYPE_COLORS = {
+        "error": "#ff4d4f",
+        "warn":  "#faad14",
+        "info":  "#40a9ff",
+        "debug": "#b37feb",
+    }
+
     def __init__(self, ylog: "YLog"):
         self.ylog: YLog = ylog
 
@@ -111,6 +125,112 @@ class LogSock:
             except Exception:
                 pass
 
+    def normalize_tag(self, txt: str = None):
+        if txt is None:
+            return None
+
+        txt = str(txt).strip().upper()
+        txt = txt.replace("-", "_").replace(" ", "_")
+        txt = re.sub(r"[^A-Z0-9_]+", "_", txt)
+        txt = re.sub(r"_+", "_", txt)
+        txt = txt.strip("_")
+        return txt or None
+
+    def key_to_color(self, key: str = None, typ: str = None):
+        if typ in self.TYPE_COLORS:
+            return self.TYPE_COLORS[typ]
+
+        key = self.normalize_tag(key)
+        if not key:
+            return "#d9d9d9"
+
+        h = hash(key) & 0xFFFFFFFF
+        hue = (h % 360) / 360.0
+        sat = 0.70 + (((h >> 8) % 20) / 100.0)
+        val = 0.88 + (((h >> 16) % 10) / 100.0)
+
+        r, g, b = colorsys.hsv_to_rgb(hue, min(sat, 1.0), min(val, 1.0))
+        return f"#{int(r * 255):02x}{int(g * 255):02x}{int(b * 255):02x}"
+
+    def hex_to_rgb(self, color: str):
+        color = str(color).strip().lstrip("#")
+        if len(color) != 6:
+            return 255, 255, 255
+        return int(color[0:2], 16), int(color[2:4], 16), int(color[4:6], 16)
+
+    def color_ansi(self, txt: str, color: str):
+        r, g, b = self.hex_to_rgb(color)
+        return f"\033[38;2;{r};{g};{b}m{txt}{self.ANSI_RESET}"
+
+    def parse_text_parts(self, txt: str = None, typ: str = None):
+        txt = "" if txt is None else str(txt)
+        out = []
+        pos = 0
+
+        for match in self.RE_TAG.finditer(txt):
+            a, b = match.span()
+
+            if a > pos:
+                raw = txt[pos:a]
+                out.append({
+                    "kind": "text",
+                    "raw": raw,
+                    "text": raw,
+                    "color": None,
+                    "ansi": raw,
+                    "key": None,
+                    "emoji": None,
+                })
+
+            raw_tag = match.group(0)
+            raw_key = match.group(1)
+            key = self.normalize_tag(raw_key)
+            emoji = self.EMOJIS.get(key) if key else None
+
+            if emoji:
+                color = self.key_to_color(key=key, typ=typ)
+                out.append({
+                    "kind": "emoji",
+                    "raw": raw_tag,
+                    "text": emoji,
+                    "color": color,
+                    "ansi": self.color_ansi(emoji, color),
+                    "key": key,
+                    "emoji": emoji,
+                })
+            else:
+                out.append({
+                    "kind": "text",
+                    "raw": raw_tag,
+                    "text": raw_tag,
+                    "color": None,
+                    "ansi": raw_tag,
+                    "key": None,
+                    "emoji": None,
+                })
+
+            pos = b
+
+        if pos < len(txt):
+            raw = txt[pos:]
+            out.append({
+                "kind": "text",
+                "raw": raw,
+                "text": raw,
+                "color": None,
+                "ansi": raw,
+                "key": None,
+                "emoji": None,
+            })
+
+        return out
+
+    def replace_emoji_tags(self, txt: str = None, typ: str = None):
+        parts = self.parse_text_parts(txt=txt, typ=typ)
+        text = "".join(part["text"] for part in parts)
+        text_ansi = "".join(part["ansi"] for part in parts)
+        return text, text_ansi, parts
+
     def handle_item(self, item: dict, addr=None):
         pid: int = item.get("pid")
         tid: int = item.get("tid")
@@ -118,14 +238,18 @@ class LogSock:
         base_log: str = item.get("log") or "main"
         typ: str = str(item.get("type") or "log").lower()
         ts: float = item.get("time", time.time())
-        text: str = str(item.get("text", ""))
+        raw_text: str = str(item.get("text", ""))
 
-        sublog: str = self.route_log(log=base_log, typ=typ, text=text)
+        text, text_ansi, parts = self.replace_emoji_tags(txt=raw_text, typ=typ)
+        sublog: str = self.route_log(log=base_log, typ=typ, text=raw_text)
 
         msg = {
             "type": typ,
             "time": ts,
             "text": text,
+            "text_ansi": text_ansi,
+            "parts": parts,
+            "raw_text": raw_text,
             "pid": pid,
             "tid": tid,
             "proc": proc,
@@ -146,6 +270,9 @@ class LogSock:
                 "base_log": base_log,
                 "time": ts,
                 "text": text,
+                "text_ansi": text_ansi,
+                "parts": parts,
+                "raw_text": raw_text,
             })
 
             if sublog != "all":
@@ -153,6 +280,9 @@ class LogSock:
                     "type": typ,
                     "time": ts,
                     "text": text,
+                    "text_ansi": text_ansi,
+                    "parts": parts,
+                    "raw_text": raw_text,
                     "pid": pid,
                     "tid": tid,
                     "proc": proc,
@@ -172,6 +302,9 @@ class LogSock:
                     "base_log": base_log,
                     "time": ts,
                     "text": text,
+                    "text_ansi": text_ansi,
+                    "parts": parts,
+                    "raw_text": raw_text,
                 })
 
     def ensure_store(self, proc: str, log: str, ts: float):
@@ -187,7 +320,7 @@ class LogSock:
             }
 
     def route_log(self, log: str, typ: str, text: str) -> str:
-        up = text.upper().strip()
+        up = str(text).upper().strip()
 
         if "[ERROR]" in up or typ == "error":
             return "error"

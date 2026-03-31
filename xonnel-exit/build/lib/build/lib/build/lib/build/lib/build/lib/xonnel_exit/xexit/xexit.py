@@ -1,191 +1,79 @@
 # [!] {+} IMPORTS
 from typing import TYPE_CHECKING
-
 # [|] {+} IMPORTS TYPING
 if TYPE_CHECKING:
     ...
-
 # [|] {-}
-
-
-
 
 
 # [|] {+} IMPORTS 3RD PARTY
-...
-
+import os
+import sys
+import atexit
 # [|] {-}
-
-
-
-
-
-# [|] {+} IMPORTS MYMODULES
-...
-
-# [|] {-}
-
-
-
-
-
 # [!] {-}
-
-
-
-
-
-
-
-# [!] {+} GLOBALS
-# [|] {+} GLOBAL CONSTANTS
-...
-
-# [|] {-}
-
-
-
-
-
-# [|] {+} GLOBAL VARIABLES
-...
-
-# [|] {-}
-
-
-
-
-
-# [|] {+} GLOBAL ALIASES
-...
-
-# [|] {-}
-
-
-
-
-
-# [|] {+} GLOBAL FUNCTIONS
-def global_function1():
-    ...
-    return ...
-
-# [|] {-}
-
-
-
-
-
-# [!] {-}
-
-
-
 
 
 
 
 # [!] {+} CLASSES
 class XExit:
-    # [|] {+} ATTRIBUTES
-    ...
+    FUNCTIONS = []
+    DONE = False
+    INITED = False
 
-    # [|] {-}
+    SYS_EXIT = sys.exit
+    OS_EXIT = os._exit
 
+    @classmethod
+    def register(cls, call:callable=None):
+        if callable(call):
+            cls.FUNCTIONS.append(call)
 
+    @classmethod
+    def onexit(cls):
+        if cls.DONE:
+            return
 
+        cls.DONE = True
 
+        for fn in cls.FUNCTIONS:
+            try:
+                fn()
+            except Exception as e:
+                print(f"[ERROR] [XExit.onexit()] [{e}]")
 
-    # [|] {+} INITIALIZING METHODS
-    def __init__(self):
-        self.init()
-        self.post()
-        ...
+    @classmethod
+    def sys_exit(cls, code=0):
+        print("sys exit")
+        cls.onexit()
+        cls.SYS_EXIT(code)
 
+    @classmethod
+    def os_exit(cls, code=0):
+        print("os exit")
+        cls.onexit()
+        cls.OS_EXIT(code)
 
-    def init(self):
-        ...
+    @classmethod
+    def my_exit(cls):
+        print("my exit")
+        cls.onexit()
 
-    def post(self):
-        ...
+    @classmethod
+    def init(cls):
+        if cls.INITED:
+            return
 
-    # [|] {-}
+        cls.INITED = True
 
-
-
-
-
-    # [|] {+} NORMAL METHODS
-    def method1(self):
-        ...
-        return ...
-
-    # [|] {-}
-
-
-
-
-
-    # [|] {+} PUBLIC METHODS
-    def getdata(self):
-        data = None
-        return data
-
-    # [|] {-}
-
-
-
-
-
-    # [|] {+} DUNDER METHODS
-    def __repr__(self):
-        return f"<{self.__class__.__name__}()>"
-
-    # [|] {-}
+        sys.exit = cls.sys_exit
+        os._exit = cls.os_exit
+        atexit.register(cls.my_exit)
 
 
-
-
-
-# [!] {-}
-
-
-
-
-
-
-
-# [!] {+} SPECIALS
-def main():
-    ...
-    return ...
-
-def test():
-    ...
-    return ...
-
-# [!] {-}
-
-
-
-
-
-
-
-# [!] {+} EXECUTION
-if __name__ == "__main__":
-    main()
-
-# [!] {-}
-
-
-
-
-
-
-
-# [!] {+} DOCSPACE
-...
-
+# auto-init
+XExit.init()
 # [!] {-}
 
 

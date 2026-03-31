@@ -217,8 +217,10 @@ class ALog:
 
 if __name__ == "__main__":
     i = 0
+    log = ALog()
+    import sys
     while True:
-        log = ALog()
+        
         log.info("Hello, ALog!")                # -> info and all tabs
         log.warn("This is a warning.")          # -> warn and all tabs
         log.error("This is an error.")          # -> error and all tabs
@@ -232,5 +234,7 @@ if __name__ == "__main__":
         log.write("")                                 # to all tab
         time.sleep(1)
         i += 1
-        if i >= 1000:
+        if i >= 1:
             break
+
+ 

@@ -1,3 +1,4 @@
-emojis_special = """
+class EmojisSpecial:
+    EMOJIS = """
 🐱‍👓 🐱‍👤 🐱‍🚀 🐱‍🐉 🐱‍💻 🐱‍🏍
 """

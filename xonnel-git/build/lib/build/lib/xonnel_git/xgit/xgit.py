@@ -1,192 +1,64 @@
-# [!] {+} IMPORTS
 from typing import TYPE_CHECKING
-
-# [|] {+} IMPORTS TYPING
 if TYPE_CHECKING:
     ...
 
-# [|] {-}
+import subprocess
+from pathlib import Path
 
 
 
 
-
-# [|] {+} IMPORTS 3RD PARTY
-...
-
-# [|] {-}
-
-
-
-
-
-# [|] {+} IMPORTS MYMODULES
-...
-
-# [|] {-}
-
-
-
-
-
-# [!] {-}
-
-
-
-
-
-
-
-# [!] {+} GLOBALS
-# [|] {+} GLOBAL CONSTANTS
-...
-
-# [|] {-}
-
-
-
-
-
-# [|] {+} GLOBAL VARIABLES
-...
-
-# [|] {-}
-
-
-
-
-
-# [|] {+} GLOBAL ALIASES
-...
-
-# [|] {-}
-
-
-
-
-
-# [|] {+} GLOBAL FUNCTIONS
-def global_function1():
-    ...
-    return ...
-
-# [|] {-}
-
-
-
-
-
-# [!] {-}
-
-
-
-
-
-
-
-# [!] {+} CLASSES
 class XGit:
-    # [|] {+} ATTRIBUTES
-    ...
+    def __init__(
+        self,
+        name: str = "whoisthereitsme",
+        repo: str = "xonnel-xonnel",
+        branch: str = "main",
+        path: str | Path = None,
+    ):
+        self.name = name
+        self.repo = repo
+        self.branch = branch
+        self.path = Path(path) if path else None
 
-    # [|] {-}
-
-
-
-
-
-    # [|] {+} INITIALIZING METHODS
-    def __init__(self):
         self.init()
-        self.post()
-        ...
-
 
     def init(self):
-        ...
+        if not self.path:
+            raise ValueError("path cannot be None")
+
+        self.link = f"https://github.com/{self.name}/{self.repo}.git"
+        XCmd.exec("git --version")
 
     def post(self):
-        ...
+        XCmd.exec("git init", cwd=self.path)
+        XCmd.exec(f"git branch -M {self.branch}", cwd=self.path)
 
-    # [|] {-}
+        try:
+            XCmd.exec("git remote get-url origin", cwd=self.path)
+            XCmd.exec(f"git remote set-url origin {self.link}", cwd=self.path)
+        except subprocess.CalledProcessError:
+            XCmd.exec(f"git remote add origin {self.link}", cwd=self.path)
 
+    def push(self, msg: str = "update"):
+        XCmd.exec("git add .", cwd=self.path)
 
+        try:
+            XCmd.exec(f'git commit -m "{msg}"', cwd=self.path)
+        except subprocess.CalledProcessError:
+            print("[INFO] no changes to commit")
 
+        XCmd.exec(f"git push origin {self.branch}", cwd=self.path)
 
+    def pull(self):
+        XCmd.exec(f"git pull origin {self.branch}", cwd=self.path)
 
-    # [|] {+} NORMAL METHODS
-    def method1(self):
-        ...
-        return ...
-
-    # [|] {-}
-
-
-
-
-
-    # [|] {+} PUBLIC METHODS
-    def getdata(self):
-        data = None
-        return data
-
-    # [|] {-}
-
-
-
-
-
-    # [|] {+} DUNDER METHODS
-    def __repr__(self):
-        return f"<{self.__class__.__name__}()>"
-
-    # [|] {-}
-
-
-
-
-
-# [!] {-}
-
-
-
-
-
-
-
-# [!] {+} SPECIALS
-def main():
-    ...
-    return ...
 
 def test():
-    ...
-    return ...
-
-# [!] {-}
-
+    git = XGit(path=r"C:\Code\Python\Packages")
+    git.post()
+    git.push("committing changes")
 
 
-
-
-
-
-# [!] {+} EXECUTION
 if __name__ == "__main__":
-    main()
-
-# [!] {-}
-
-
-
-
-
-
-
-# [!] {+} DOCSPACE
-...
-
-# [!] {-}
-
-
-
+    test()

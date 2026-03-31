@@ -5,12 +5,7 @@ if TYPE_CHECKING:
 import subprocess
 from pathlib import Path
 
-
-class XCmd:
-    @staticmethod
-    def exec(cmd: str = "", cwd: str | Path = None, check: bool = True):
-        print(f"[EXEC] {cmd} (CWD: {cwd})")
-        return subprocess.run(cmd, shell=True, check=check, cwd=cwd)
+from xonnel_cmd import XCmd
 
 
 class XGit:

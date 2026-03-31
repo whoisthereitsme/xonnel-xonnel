@@ -1,192 +1,61 @@
 # [!] {+} IMPORTS
 from typing import TYPE_CHECKING
-
 # [|] {+} IMPORTS TYPING
 if TYPE_CHECKING:
     ...
-
 # [|] {-}
-
-
-
 
 
 # [|] {+} IMPORTS 3RD PARTY
-...
-
+from pathlib import Path
+import shutil
 # [|] {-}
-
-
-
-
-
-# [|] {+} IMPORTS MYMODULES
-...
-
-# [|] {-}
-
-
-
-
-
 # [!] {-}
-
-
-
-
-
-
-
-# [!] {+} GLOBALS
-# [|] {+} GLOBAL CONSTANTS
-...
-
-# [|] {-}
-
-
-
-
-
-# [|] {+} GLOBAL VARIABLES
-...
-
-# [|] {-}
-
-
-
-
-
-# [|] {+} GLOBAL ALIASES
-...
-
-# [|] {-}
-
-
-
-
-
-# [|] {+} GLOBAL FUNCTIONS
-def global_function1():
-    ...
-    return ...
-
-# [|] {-}
-
-
-
-
-
-# [!] {-}
-
-
-
 
 
 
 
 # [!] {+} CLASSES
 class XCopy:
-    # [|] {+} ATTRIBUTES
-    ...
+    def __init__(self, src: str | Path = None, tgt: str | Path = None):
+        try:
+            if src is None or tgt is None:
+                print("[ERROR] [XCopy] [src and tgt cannot be None]")
+                return False
 
-    # [|] {-}
+            src = Path(src)
+            tgt = Path(tgt)
 
+            if not src.exists():
+                print(f"[ERROR] [XCopy] [Source does not exist: {src}]")
+                return False
 
+            # ensure parent exists
+            tgt.parent.mkdir(parents=True, exist_ok=True)
 
+            if src.is_file():
+                # if target is dir → copy into it
+                if tgt.exists() and tgt.is_dir():
+                    tgt = tgt / src.name
 
+                shutil.copy2(src, tgt)
 
-    # [|] {+} INITIALIZING METHODS
-    def __init__(self):
-        self.init()
-        self.post()
-        ...
+            elif src.is_dir():
+                # copy entire directory
+                if tgt.exists():
+                    # mimic overwrite behavior (like your other tools → deterministic)
+                    shutil.rmtree(tgt)
 
+                shutil.copytree(src, tgt)
 
-    def init(self):
-        ...
+            else:
+                print(f"[ERROR] [XCopy] [Unsupported src type: {src}]")
+                return False
 
-    def post(self):
-        ...
+            return True
 
-    # [|] {-}
-
-
-
-
-
-    # [|] {+} NORMAL METHODS
-    def method1(self):
-        ...
-        return ...
-
-    # [|] {-}
-
-
-
-
-
-    # [|] {+} PUBLIC METHODS
-    def getdata(self):
-        data = None
-        return data
-
-    # [|] {-}
-
-
-
-
-
-    # [|] {+} DUNDER METHODS
-    def __repr__(self):
-        return f"<{self.__class__.__name__}()>"
-
-    # [|] {-}
-
-
-
-
+        except Exception as e:
+            print(f"[ERROR] [XCopy] [Error copying {src} -> {tgt}: {e}]")
+            return False
 
 # [!] {-}
-
-
-
-
-
-
-
-# [!] {+} SPECIALS
-def main():
-    ...
-    return ...
-
-def test():
-    ...
-    return ...
-
-# [!] {-}
-
-
-
-
-
-
-
-# [!] {+} EXECUTION
-if __name__ == "__main__":
-    main()
-
-# [!] {-}
-
-
-
-
-
-
-
-# [!] {+} DOCSPACE
-...
-
-# [!] {-}
-
-
-

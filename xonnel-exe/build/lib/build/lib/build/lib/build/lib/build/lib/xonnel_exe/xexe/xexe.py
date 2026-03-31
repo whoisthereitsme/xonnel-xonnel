@@ -67,6 +67,7 @@ class XExe:
                 [
                     sys.executable, "-m", "PyInstaller",
                     "--onefile",
+                    "--windowed",
                     "--noconfirm",
                     "--clean",
                     "--name", self.name,
@@ -77,8 +78,6 @@ class XExe:
                     str(self.path),
                 ],
                 cwd=self.base,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
                 check=True,
             )
 
