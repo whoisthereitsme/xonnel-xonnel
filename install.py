@@ -51,7 +51,7 @@ class Install:
         for i, d in enumerate(packages, 1):
             print(f"[INSTALLING] [{i}/{n}] {d}")
             try:
-                XCmd.exec(cmd=f"{sys.executable} -m pip install --upgrade .", cwd=d)
+                XCmd.exec(cmd=[sys.executable, "-m", "pip", "install", "--upgrade", "."], cwd=d, mode="LIVE")
             except Exception as e:
                 print(f"[INSTALLING] [FAILED] {e}")
 
