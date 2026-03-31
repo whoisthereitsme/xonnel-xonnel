@@ -2,10 +2,18 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     ...
 
-import subprocess
-from pathlib import Path
 
+
+
+
+from pathlib import Path
 from xonnel_cmd import XCmd
+
+
+
+
+
+
 
 
 class XGit:
@@ -37,7 +45,7 @@ class XGit:
         try:
             XCmd.exec("git remote get-url origin", cwd=self.path)
             XCmd.exec(f"git remote set-url origin {self.link}", cwd=self.path)
-        except subprocess.CalledProcessError:
+        except:
             XCmd.exec(f"git remote add origin {self.link}", cwd=self.path)
 
     def push(self, msg: str = "update"):
@@ -45,7 +53,7 @@ class XGit:
 
         try:
             XCmd.exec(f'git commit -m "{msg}"', cwd=self.path)
-        except subprocess.CalledProcessError:
+        except:
             print("[INFO] no changes to commit")
 
         XCmd.exec(f"git push origin {self.branch}", cwd=self.path)
