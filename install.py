@@ -21,10 +21,10 @@ class Install:
 
     def __init__(self, filter="xonnel"):
         self.filter = filter
-        self.installpip()
-        self.installgit()
+        self.installpmodules()
+        self.committogithub()
 
-    def installpip(self):
+    def installpmodules(self):
         packages = []
         for d in self.BASE.iterdir():
             if d.is_dir() and d.name.startswith(self.filter):
@@ -33,14 +33,34 @@ class Install:
         n = len(packages)
         print(f"Found {n} packages to install.")
 
+        xonxon = None
         for i, d in enumerate(packages, 1):
-            print(f"[INSTALLING] [{i}/{n}] {d}")
-            try:
-                XCmd.exec(cmd=[sys.executable, "-m", "pip", "install", "--upgrade", "."], cwd=d, mode="LIVE")
-            except Exception as e:
-                print(f"[INSTALLING] [FAILED] {e}")
+            if "xonnel-xonnel" in d.name:       # skip installing the git package and install it in the end since its the collection of all the other packages
+                xonxon = d
+            else:
+                self.installmodule(path=d, id=i, total=n)
 
-    def installgit(self):
+        if xonxon:
+            self.installmodule(path=xonxon, id=n, total=n)
+
+    def installmodule(self, path:str|Path=None, id:int=None, total:int=None):
+        try:
+            if path is None:
+                print("[ERROR] [Install.installmodule()] [path cannot be None]")
+                return
+            path = Path(path)
+
+            if not path.exists():
+                print(f"[ERROR] [Install.installmodule()] [Path does not exist: {path}]")
+                return
+            print(f"[INSTALLING] [{id}/{total}] {path}")
+            XCmd.exec(cmd=[sys.executable, "-m", "pip", "install", "--upgrade", "."], cwd=path, mode="LIVE")
+            
+        except Exception as e:
+            print(f"[ERROR] [Install.installmodule()] [Failed to install module: {e}]")
+
+
+    def committogithub(self):
         git = XGit(path=self.BASE)
         git.post()
         git.push("committing changes")
