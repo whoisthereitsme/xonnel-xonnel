@@ -24,16 +24,6 @@ from xonnel_cmd import XCmd
 
 
 
-
-
-
-
-
-
-
-
-
-
 class Install:
     BASE = Path(r"C:\Code\Python\Packages")
 
@@ -103,9 +93,6 @@ class Install:
 
 if __name__ == "__main__":
     Install("xonnel")
-
-
-
 
 
 
