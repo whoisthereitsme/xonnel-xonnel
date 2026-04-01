@@ -44,3 +44,25 @@ class XStats:
         self.net.update()
         self.win.update()
 
+
+
+
+def test():
+    stats = XStats()
+
+    import time
+    for i in range(5):
+        time.sleep(1)
+        stats.update()
+
+        print(f"cpu:        {stats.cpu.core.perc.last()}")
+        print(f"gpu:        {stats.gpu.perc.last()}")
+        print(f"ram:        {stats.ram.perc.last()}")
+        print(f"vram:       {stats.vram.perc.last()}")
+        print(f"disk:       {stats.disk.perc.last()}")
+        print(f"net up:     {stats.net.up.last()}")
+        print(f"net down:   {stats.net.down.last()}")
+        print(f"net rate:   {stats.net.rate.last()}")
+        print(f"win:        {stats.win.rate.last()}")
+
+        print("-" * 40)
