@@ -81,10 +81,10 @@ class XStatsDisks:
     def init(self):
         self.disks: dict[str, XStatsDisk] = {}
 
-        drives = self.drives if self.drives is not None else self.getdrives()
+        drives: list[str] = self.drives if self.drives is not None else self.getdrives()
 
         for drive in drives:
-            disk = self.newdisk(path=f"{drive}:/")
+            disk: XStatsDisk = self.newdisk(path=f"{drive}:/")
             if disk:
                 self.disks[drive] = disk
                 setattr(self, drive, disk)
@@ -98,7 +98,7 @@ class XStatsDisks:
                 drives.append(chr(65 + i))  # 65 = "A"
         return drives
 
-    def newdisk(self, path:str|Path=None):
+    def newdisk(self, path:str|Path=None) -> XStatsDisk|None:
         if not path:
             return None
 
@@ -128,8 +128,9 @@ if __name__ == "__main__":
 
     disks.update()
 
-    if "C" in disks.disks:
-        print(disks.disks["C"].getsize())
-        print(disks.disks["C"].getused())
-        print(disks.disks["C"].getfree())
-        print(disks.disks["C"].getperc())
+    for drive, disk in disks.disks.items():
+        print(f"Drive: {drive}")
+        print(disk.size.last())
+        print(disk.used.last())
+        print(disk.free.last())
+        print(disk.perc.last())

@@ -97,7 +97,7 @@ class Install:
 
 
 if __name__ == "__main__":
-    Install("xonnel")
+    Install("xonnel-stats-data")
 
 
 

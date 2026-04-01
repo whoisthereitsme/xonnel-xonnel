@@ -45,7 +45,7 @@ class XStatsPair:
 
 
 class XStatsData:
-    def __init__(self, unit:str=None):
+    def __init__(self, unit:str=""):
         self.unit: str = unit
 
         self.init()
@@ -73,36 +73,38 @@ class XStatsData:
                 break
         return selected
 
-    def mean(self, time:float=10.0):
+    def mean(self, time:float=10.0, format=True):
         data = self.filter(time=time)
         value = XStat.median(data=data)
-        return self._format(value=value)
+        return self._format(value=value, format=format)
     
-    def avg(self, time:float=10.0):
+    def avg(self, time:float=10.0, format=True):
         data = self.filter(time=time)
         value = XStat.mean(data=data)
-        return self._format(value=value)
+        return self._format(value=value, format=format)
         
-    def min(self, time:float=60.0):
+    def min(self, time:float=60.0, format=True):
         data = self.filter(time=time)
         value = XStat.min(data=data)
-        return self._format(value=value)
+        return self._format(value=value, format=format)
 
-    def max(self, time:float=60.0):
+    def max(self, time:float=60.0, format=True):
         data = self.filter(time=time)
         value = XStat.max(data=data)
-        return self._format(value=value)
+        return self._format(value=value, format=format)
     
-    def last(self):
+    def last(self, format=True):
         if len(self.history) > 0:
             value = self.history[-1].data
-            return self._format(value=value)
-        return self._format(value=None)
+            return self._format(value=value, format=format)
+        return self._format(value=None, format=format)
     
-    def _format(self, value:float=None):
+    def _format(self, value:float=None, format=True):
         if value is None:
             return "N/A"
-        if self.unit:
-            return f"{value:.2f} {self.unit}"
-        return f"{value:.2f}"
+        value = round(value, 2)
+        if format==True:
+            return f"{value} {self.unit}"
+        return value
+
             
