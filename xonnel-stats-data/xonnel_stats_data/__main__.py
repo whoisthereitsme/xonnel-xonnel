@@ -16,11 +16,4 @@ else:
     from .xstatsdata.xstatsdata import XStatsData
 
 
-# [!] {+} DOCSPACE __MAIN__
-...
-
-# [!] {-}
-
-
-
 

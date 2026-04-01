@@ -4,20 +4,16 @@ if TYPE_CHECKING:
 
 
 
-from pathlib import Path
-
-
-
-
 
 class XStatsDisk:
-    def __init__(self, drive:str|Path=Path("C:\\")):
-        self.drive = drive
-
+    def __init__(self):
         self.init()
 
 
     def init(self):
-        ...
+        self.disks = []
 
+  
+    
 
+class XStatsDisks:

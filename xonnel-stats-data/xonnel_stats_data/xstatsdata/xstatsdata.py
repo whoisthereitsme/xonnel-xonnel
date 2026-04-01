@@ -9,8 +9,13 @@ if TYPE_CHECKING:
 
 
 import time
-
 from xonnel_stat import XStat
+
+
+
+
+
+
 
 
 
@@ -35,8 +40,14 @@ class XStatsPair:
 
 
 
+
+
+
+
 class XStatsData:
-    def __init__(self):
+    def __init__(self, unit:str=None):
+        self.unit = unit
+
         self.init()
   
 
@@ -70,14 +81,3 @@ class XStatsData:
             return XStat.max(data=data)
         return None
             
-
-
-
-
-
-
-
-
-
-
-
