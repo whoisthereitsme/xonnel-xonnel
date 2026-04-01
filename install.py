@@ -102,7 +102,7 @@ class Install:
 
 
 if __name__ == "__main__":
-    Install("xonnel-stats-disk")
+    Install("xonnel")
 
 
 
