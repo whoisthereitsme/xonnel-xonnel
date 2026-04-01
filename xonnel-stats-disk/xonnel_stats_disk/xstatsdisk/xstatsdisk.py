@@ -22,9 +22,8 @@ from xonnel_stats_data import XStatsData
 
 
 class XStatsDisk:
-    def __init__(self, path:str|Path=None, freq:float=1.0):
+    def __init__(self, path:str|Path=None):
         self.path = Path(path) if path else None
-        self.freq = freq
 
         self.init()
 
@@ -74,14 +73,13 @@ class XStatsDisk:
 
 
 class XStatsDisks:
-    def __init__(self, drives: list[str] | None = None):
-        self.drives = drives
+    def __init__(self):
         self.init()
 
     def init(self):
         self.disks: dict[str, XStatsDisk] = {}
 
-        drives: list[str] = self.drives if self.drives is not None else self.getdrives()
+        drives: list[str] = self.getdrives()
 
         for drive in drives:
             disk: XStatsDisk = self.newdisk(path=f"{drive}:/")
@@ -121,7 +119,27 @@ class XStatsDisks:
             disk.update()
 
 
-if __name__ == "__main__":
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def test():
     disks = XStatsDisks()
     print(disks.getdrives())
     print(disks.disks)
@@ -134,3 +152,16 @@ if __name__ == "__main__":
         print(disk.used.last())
         print(disk.free.last())
         print(disk.perc.last())
+
+        print(disk.size.last(format=False))
+        print(disk.used.last(format=False))
+        print(disk.free.last(format=False))
+        print(disk.perc.last(format=False))
+
+
+
+
+
+if __name__ == "__main__":
+    test()
+   
