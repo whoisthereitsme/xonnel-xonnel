@@ -1,35 +1,19 @@
-# [!] {+} IMPORTS
 from typing import TYPE_CHECKING
-
-# [|] {+} IMPORTS TYPING
 if TYPE_CHECKING:
     ...
 
-# [|] {-}
 
 
 
 
 
-# [|] {+} IMPORTS 3RD PARTY
-...
-
-# [|] {-}
-
-
-
-
-
-# [|] {+} IMPORTS MYMODULES
-...
-
-# [|] {-}
-
-
-
-
-
-# [!] {-}
+from xonnel_stats_cpu   import XStatsCpu
+from xonnel_stats_gpu   import XStatsGpu
+from xonnel_stats_ram   import XStatsRam
+from xonnel_stats_vram  import XStatsVram
+from xonnel_stats_disk  import XStatsDisk
+from xonnel_stats_net   import XStatsNet
+from xonnel_stats_win   import XStatsWin
 
 
 
@@ -37,156 +21,26 @@ if TYPE_CHECKING:
 
 
 
-# [!] {+} GLOBALS
-# [|] {+} GLOBAL CONSTANTS
-...
-
-# [|] {-}
-
-
-
-
-
-# [|] {+} GLOBAL VARIABLES
-...
-
-# [|] {-}
-
-
-
-
-
-# [|] {+} GLOBAL ALIASES
-...
-
-# [|] {-}
-
-
-
-
-
-# [|] {+} GLOBAL FUNCTIONS
-def global_function1():
-    ...
-    return ...
-
-# [|] {-}
-
-
-
-
-
-# [!] {-}
-
-
-
-
-
-
-
-# [!] {+} CLASSES
 class XStats:
-    # [|] {+} ATTRIBUTES
-    ...
-
-    # [|] {-}
-
-
-
-
-
-    # [|] {+} INITIALIZING METHODS
     def __init__(self):
         self.init()
-        self.post()
-        ...
-
 
     def init(self):
-        ...
-
-    def post(self):
-        ...
-
-    # [|] {-}
-
-
-
+        self.cpu  = XStatsCpu()
+        self.gpu  = XStatsGpu()
+        self.ram  = XStatsRam()
+        self.vram = XStatsVram()
+        self.disk = XStatsDisk()
+        self.net  = XStatsNet()
+        self.win  = XStatsWin()
 
 
-    # [|] {+} NORMAL METHODS
-    def method1(self):
-        ...
-        return ...
-
-    # [|] {-}
-
-
-
-
-
-    # [|] {+} PUBLIC METHODS
-    def getdata(self):
-        data = None
-        return data
-
-    # [|] {-}
-
-
-
-
-
-    # [|] {+} DUNDER METHODS
-    def __repr__(self):
-        return f"<{self.__class__.__name__}()>"
-
-    # [|] {-}
-
-
-
-
-
-# [!] {-}
-
-
-
-
-
-
-
-# [!] {+} SPECIALS
-def main():
-    ...
-    return ...
-
-def test():
-    ...
-    return ...
-
-# [!] {-}
-
-
-
-
-
-
-
-# [!] {+} EXECUTION
-if __name__ == "__main__":
-    main()
-
-# [!] {-}
-
-
-
-
-
-
-
-# [!] {+} DOCSPACE
-...
-
-# [!] {-}
-
-
+    def update(self):
+        self.cpu.update()
+        self.gpu.update()
+        self.ram.update()
+        self.vram.update()
+        self.disk.update()
+        self.net.update()
+        self.win.update()
 
