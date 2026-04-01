@@ -1,7 +1,8 @@
-from .xstatsdisk.xstatsdisk import XStatsDisk
+from .xstatsdisk.xstatsdisk import XStatsDisk, XStatsDisks
 
 __all__ = [
-    "XStatsDisk"
+    "XStatsDisk",
+    "XStatsDisks",
 ]
 
 

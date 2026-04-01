@@ -11,7 +11,7 @@ from xonnel_stats_cpu   import XStatsCpu
 from xonnel_stats_gpu   import XStatsGpu
 from xonnel_stats_ram   import XStatsRam
 from xonnel_stats_vram  import XStatsVram
-from xonnel_stats_disk  import XStatsDisk
+from xonnel_stats_disk  import XStatsDisk 
 from xonnel_stats_net   import XStatsNet
 from xonnel_stats_win   import XStatsWin
 
@@ -51,7 +51,7 @@ def test():
     stats = XStats()
 
     import time
-    for i in range(5):
+    for i in range(60):
         time.sleep(1)
         stats.update()
 
@@ -59,10 +59,14 @@ def test():
         print(f"gpu:        {stats.gpu.perc.last()}")
         print(f"ram:        {stats.ram.perc.last()}")
         print(f"vram:       {stats.vram.perc.last()}")
-        print(f"disk:       {stats.disk.perc.last()}")
+        print(f"disk:       {stats.disk..perc.last()}")
         print(f"net up:     {stats.net.up.last()}")
         print(f"net down:   {stats.net.down.last()}")
         print(f"net rate:   {stats.net.rate.last()}")
         print(f"win:        {stats.win.rate.last()}")
 
         print("-" * 40)
+
+
+if __name__ == "__main__":
+    test()
