@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "xonnel-pack"
+version = "0.1.0"
+description = """A python library: xonnel-pack
+
+- pack (dir    →   .zip)
+- pack (file   →   .zip)
+- pack (dir    →   .7z)
+- pack (file   →   .7z)
+- pack (dir    →   .rar)
+- pack (file   →   .rar)
+- pack (dir    →   .tar)
+- pack (file   →   .tar)"""
+authors = [{name = "Xonnel"}]
+readme = "README.md"
+requires-python = ">=3.14"
+
+[tool.setuptools.packages.find]
+where = ["."]
