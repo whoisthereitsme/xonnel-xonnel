@@ -11,6 +11,7 @@ from pathlib import Path
 
 
 from xonnel_copy import XCopy
+from xonnel_move import XMove
 
 
 
@@ -21,15 +22,26 @@ class XDotType:
     
     @classmethod
     def move(cls, src:str|Path=None, tgt:str|Path=None):
-        ... # same per filetype implementation here!
+        XMove(src=src, tgt=tgt)
     
     @classmethod
     def delete(cls, path:str|Path=None):
-        ... # same per filetype implementation here!
+        if path is not None:
+            path = Path(path)
+            if path.exists():
+                if path.is_file():
+                    path.unlink()
+                elif path.is_dir():
+                    for child in path.iterdir():
+                        cls.delete(child)
+                    path.rmdir()
 
     @classmethod
     def ensure(cls, path:str|Path=None):
-        ... # same per filetype implementation here!
+        if path is not None:
+            path = Path(path)
+            if not path.exists():
+                path.mkdir(parents=True, exist_ok=True)
 
     def load(self):
         raise NotImplementedError("XDotType.load() is not implemented!")

@@ -92,7 +92,8 @@ class Install:
 
 
 if __name__ == "__main__":
-    Install("xonnel-move")
+    Install("xonnel-ensure")
+    Install("xonnel-delete")
 
 
 
