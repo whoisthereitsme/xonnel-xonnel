@@ -198,4 +198,6 @@ def getgame():
 
 
 if __name__ == "__main__":
-    XGame(game=getgame())
+    game = getgame() 
+    print(f"Selected game: {game}")  
+    XGame(game=game)
