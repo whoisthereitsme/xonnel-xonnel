@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "xonnel-save"
+version = "0.1.0"
+description = """A python library: xonnel-save
+
+- saving of any data to any file type
+    - as reasonable format (e.g. json for dict, xml for ElementTree, etc.)
+    - as bytes"""
+authors = [{name = "Xonnel"}]
+readme = "README.md"
+requires-python = ">=3.14"
+
+[tool.setuptools.packages.find]
+where = ["."]

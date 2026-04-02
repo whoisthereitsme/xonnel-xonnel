@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "xonnel-execute"
+version = "0.1.0"
+description = """A python library: xonnel-execute
+
+- executing files of any type
+    - .exe (execute as program)
+    - .py  (execute as python script)
+    - .cmd (execute as command)
+    - .ps1 (execute as powershell script)
+    - .bat (execute as batch script)
+    - ...  (execute if possible or raise error if not executable)"""
+authors = [{name = "Xonnel"}]
+readme = "README.md"
+requires-python = ">=3.14"
+
+[tool.setuptools.packages.find]
+where = ["."]

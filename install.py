@@ -92,8 +92,8 @@ class Install:
 
 
 if __name__ == "__main__":
-    Install("xonnel-pack")
-    Install("xonnel-unpack")
+    Install("xonnel-load")
+    Install("xonnel-save")
 
 
 
