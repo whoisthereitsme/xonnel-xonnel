@@ -245,7 +245,7 @@ class Install:
 
 
 if __name__ == "__main__":
-    filter = "xonnel-cmd"
+    filter = "xonnel-xonnel"
     for i in range(1):    
         try:
             from xonnel_git import XGit
