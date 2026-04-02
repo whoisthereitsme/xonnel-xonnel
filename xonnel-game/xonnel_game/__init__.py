@@ -1,4 +1,4 @@
-from .xgame.xgame import XGame
+from .xgame import XGame
 
 __all__ = [
     "XGame"
