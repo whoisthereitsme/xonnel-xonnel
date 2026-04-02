@@ -4,22 +4,12 @@
 
 
 
-
-
-
-
-
 if __name__ == "__main__":
-    from xfarm.xfarm import XFarm
-    XFarm()
+    from xgame.xgame import XGame
+    XGame()
 else:
-    from .xfarm.xfarm import XFarm
+    from .xgame.xgame import XGame
 
-
-# [!] {+} DOCSPACE __MAIN__
-...
-
-# [!] {-}
 
 
 

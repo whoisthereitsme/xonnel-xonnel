@@ -1,9 +1,4 @@
-from .xfarm import XFarm
-
-
-
-
-
+from .xgame import XGame
 
 
 
@@ -11,14 +6,8 @@ from .xfarm import XFarm
 
 
 __all__ = [
-    "XFarm"
+    "XGame"
 ]
-
-
-# [!] {+} DOCSPACE __INIT__
-...
-
-# [!] {-}
 
 
 
