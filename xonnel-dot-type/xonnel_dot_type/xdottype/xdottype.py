@@ -1,33 +1,34 @@
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    ...
+    from pathlib import Path
 
 
 
 
 
 
-from pathlib import Path
+
+
+
+
+
+from xonnel_copy        import XCopy
+from xonnel_move        import XMove
+from xonnel_delete      import XDelete
+from xonnel_ensure      import XEnsure
+from xonnel_pack        import XPack
+from xonnel_unpack      import XUnpack
+from xonnel_load        import XLoad
+from xonnel_save        import XSave
+# from xonnel_execute import XExecute
 
 
 
 
 
 
-from xonnel_copy import XCopy
-from xonnel_move import XMove
-from xonnel_delete import XDelete
-from xonnel_ensure import XEnsure
-from xonnel_pack import XPack
-from xonnel_unpack import XUnpack
-from xonnel_load import XLoad
-from xonnel_save import XSave
-from xonnel_execute import XExecute
 
-
-
-
-class XDotType:
+class XFile:
     @classmethod
     def delete(cls, path:str|Path=None):
         XDelete(path=path)
@@ -53,13 +54,14 @@ class XDotType:
         XUnpack(src=src, tgt=tgt)
 
     @classmethod
-    def load(cls, path:str|Path=None, asbytes:bool=False):
-        XLoad(path=path, asbytes=asbytes)
+    def load(cls, path:str|Path=None, force:str=None):
+        return XLoad(path=path, force=force)
 
     @classmethod
-    def save(cls, path:str|Path=None, data=None):
-        XSave(path=path, data=data)
+    def save(cls, path:str|Path=None, data=None, force:str=None):
+        return XSave(path=path, data=data, force=force)
 
     @classmethod
-    def execute(cls, path:str|Path=None):
-        XExecute(path=path)
+    def execute(cls, path:str|Path=None, args:list[str]=None):
+        ...
+        # return XExecute(path=path, args=args)

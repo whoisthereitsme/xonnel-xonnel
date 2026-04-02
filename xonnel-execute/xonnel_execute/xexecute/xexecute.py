@@ -1,35 +1,20 @@
-# [!] {+} IMPORTS
 from typing import TYPE_CHECKING
-
-# [|] {+} IMPORTS TYPING
 if TYPE_CHECKING:
     ...
 
-# [|] {-}
 
 
 
 
 
-# [|] {+} IMPORTS 3RD PARTY
-...
-
-# [|] {-}
+import sys
 
 
 
 
 
-# [|] {+} IMPORTS MYMODULES
-...
-
-# [|] {-}
-
-
-
-
-
-# [!] {-}
+from pathlib import Path
+from xonnel_cmd import XCmd
 
 
 
@@ -37,156 +22,37 @@ if TYPE_CHECKING:
 
 
 
-# [!] {+} GLOBALS
-# [|] {+} GLOBAL CONSTANTS
-...
-
-# [|] {-}
-
-
-
-
-
-# [|] {+} GLOBAL VARIABLES
-...
-
-# [|] {-}
-
-
-
-
-
-# [|] {+} GLOBAL ALIASES
-...
-
-# [|] {-}
-
-
-
-
-
-# [|] {+} GLOBAL FUNCTIONS
-def global_function1():
-    ...
-    return ...
-
-# [|] {-}
-
-
-
-
-
-# [!] {-}
-
-
-
-
-
-
-
-# [!] {+} CLASSES
 class XExecute:
-    # [|] {+} ATTRIBUTES
-    ...
+    def __new__(cls, path:str|Path=None, args:list[str]=None, cwd:str|Path=None, check:bool=True, mode:str="ERROR"):
+        if path is None:
+            raise ValueError("[ERROR] XExecute.__new__() path cannot be None")
 
-    # [|] {-}
+        path = Path(path)
+        if not path.exists():
+            raise ValueError(f"[ERROR] XExecute.__new__() Source does not exist: {path}")
 
+        if not path.is_file():
+            raise ValueError(f"[ERROR] XExecute.__new__() Source must be a file: {path}")
 
+        return cls._exec(path=path, args=args, cwd=cwd, check=check, mode=mode)
 
+    @classmethod
+    def _exec(cls, path:Path=None, args:list[str]=None, cwd:str|Path=None, check:bool=True, mode:str="ERROR"):
+        args = args or []
+        ext = path.suffix.lower()
+        cmd = None
+        if ext == ".exe":
+            cmd = [str(path), *args]
+        elif ext in (".bat", ".cmd"):
+            cmd = ["cmd", "/c", str(path), *args]
+        elif ext == ".ps1":
+            cmd = ["powershell.exe", "-ExecutionPolicy", "Bypass", "-File", str(path), *args]
+        elif ext == ".py":
+            cmd = [sys.executable, str(path), *args]
+        elif ext == ".sh":
+            cmd = ["bash", str(path), *args]
 
-
-    # [|] {+} INITIALIZING METHODS
-    def __init__(self):
-        self.init()
-        self.post()
-        ...
-
-
-    def init(self):
-        ...
-
-    def post(self):
-        ...
-
-    # [|] {-}
-
-
-
-
-
-    # [|] {+} NORMAL METHODS
-    def method1(self):
-        ...
-        return ...
-
-    # [|] {-}
-
-
-
-
-
-    # [|] {+} PUBLIC METHODS
-    def getdata(self):
-        data = None
-        return data
-
-    # [|] {-}
-
-
-
-
-
-    # [|] {+} DUNDER METHODS
-    def __repr__(self):
-        return f"<{self.__class__.__name__}()>"
-
-    # [|] {-}
-
-
-
-
-
-# [!] {-}
-
-
-
-
-
-
-
-# [!] {+} SPECIALS
-def main():
-    ...
-    return ...
-
-def test():
-    ...
-    return ...
-
-# [!] {-}
-
-
-
-
-
-
-
-# [!] {+} EXECUTION
-if __name__ == "__main__":
-    main()
-
-# [!] {-}
-
-
-
-
-
-
-
-# [!] {+} DOCSPACE
-...
-
-# [!] {-}
-
-
-
+        if cmd is not None:
+            return XCmd.exec(cmd=cmd, cwd=cwd, check=check, shell=False, mode=mode)
+        raise ValueError(f"[ERROR] XExecute._exec() Unsupported file type: {ext}")
+        
