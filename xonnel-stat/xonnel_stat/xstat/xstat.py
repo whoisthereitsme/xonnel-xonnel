@@ -57,6 +57,11 @@ class XStat:
         if xa.size == 0:
             raise ValueError("[ERROR] XStat._cast2() x and y cannot be empty")
         return xa, ya
+    
+    @classmethod
+    def _clip(cls, data:int|float=None, low:float=0, high:float=100) -> float:
+        return min(max(float(data), low), high)
+
 
     # basics
     @classmethod
@@ -143,10 +148,6 @@ class XStat:
             "intercept_stderr": float(r.intercept_stderr),
         }
     
-    @classmethod
-    def _clip(cls, data:int|float=None, low:float=0, high:float=100) -> float:
-        return min(max(float(data), low), high)
-
     @classmethod
     def between(cls, data:Any=None, p0:int=0, p1:int=100) -> list[float]:
         p0 = cls._clip(data=p0, low=0, high=100)
