@@ -194,7 +194,7 @@ class XGame:
 
 
 def getgame():
-    return sys.argv[1] if len(sys.argv) > 1 else ""
+    return str(sys.argv[-1]) if len(sys.argv) > 1 else ""
 
 
 if __name__ == "__main__":
