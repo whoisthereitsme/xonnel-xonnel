@@ -92,8 +92,7 @@ class Install:
 
 
 if __name__ == "__main__":
-    Install("xonnel-cmd")
-    Install("xonnel-execute")
+    Install("xonnel-file")
 
 
 
