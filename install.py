@@ -10,23 +10,7 @@ if TYPE_CHECKING:
 import time
 import sys
 from pathlib import Path
-
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    ...
-
-
-
-
-
-
-import time
-import sys
 import subprocess
-from pathlib import Path
-
-
-
 
 
 
@@ -245,7 +229,7 @@ class Install:
 
 
 if __name__ == "__main__":
-    filter = "xonnel"
+    filter = "xonnel-game"
     for i in range(1):    
         try:
             from xonnel_git import XGit
