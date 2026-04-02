@@ -9,8 +9,24 @@ if TYPE_CHECKING:
 
 import time
 import sys
-from pathlib import Path
 import subprocess
+
+
+
+from pathlib import Path
+
+
+
+
+from xonnel_git import XGit
+from xonnel_cmd import XCmd
+
+
+
+
+
+
+
 
 
 
@@ -224,21 +240,24 @@ class Install:
 
 
 
+def main(filter="xonnel"):
+    Install(filter=filter)
+
+
+
+
+
+
+
+
+
 
 
 
 
 if __name__ == "__main__":
-    filter = "xonnel-game"
-    for i in range(1):    
-        try:
-            from xonnel_git import XGit
-            from xonnel_cmd import XCmd
-            Install(filter=filter)
-        except ImportError as e:
-            print("using fallback InstallStandalone since some modules are not installed yet.")
-            InstallStandalone(filter=filter)
-
+    main(filter="xonnel")
+    
 
 
 
