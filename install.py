@@ -245,11 +245,11 @@ class Install:
 
 
 if __name__ == "__main__":
-    for i in range(5):      # to resolve the issue of some modules not being found in the first run since they are being installed in the same process, we try to import the modules and if it fails we use the standalone installer which does not rely on any of the modules being installed
+    for i in range(1):      # to resolve the issue of some modules not being found in the first run since they are being installed in the same process, we try to import the modules and if it fails we use the standalone installer which does not rely on any of the modules being installed
         try:
             from xonnel_git import XGit
             from xonnel_cmd import XCmd
-            Install("xonnel")
+            Install("xonnel-execute")
         except ImportError as e:
             print("using fallback InstallStandalone since some modules are not installed yet.")
             InstallStandalone("xonnel")
