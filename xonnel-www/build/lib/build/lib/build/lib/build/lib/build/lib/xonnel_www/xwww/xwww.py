@@ -1,23 +1,22 @@
-# [!] {+} IMPORTS
 from typing import TYPE_CHECKING
-# [|] {+} IMPORTS TYPING
 if TYPE_CHECKING:
     ...
-# [|] {-}
 
 
-# [|] {+} IMPORTS 3RD PARTY
+
+
+
+
 from pathlib import Path
 from bs4 import BeautifulSoup
 from pydantic_core import Url
 from urllib import request
-# [|] {-}
-# [!] {-}
 
 
 
 
-# [!] {+} CLASSES
+
+
 class XWww:
     RETRIES = 5
     AGENT = (
@@ -103,4 +102,10 @@ class XWww:
         print(f"[ERROR] [XWww.download()] [failed after {retries} retries]")
         return None
 
-# [!] {-}
+
+
+
+
+
+
+
