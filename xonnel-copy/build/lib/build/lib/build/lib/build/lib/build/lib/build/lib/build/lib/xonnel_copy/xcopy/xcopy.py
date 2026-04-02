@@ -41,7 +41,6 @@ class XCopy:
             elif src.is_dir():
                 if tgt.exists():
                     shutil.rmtree(tgt)
-
                 shutil.copytree(src, tgt)
 
             else:
