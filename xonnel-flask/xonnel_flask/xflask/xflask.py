@@ -6,14 +6,11 @@ if TYPE_CHECKING:
 
 
 import flask
-from xflaskview import XFlaskView
 
 
 
 
-
-
-
+from .xflaskview import XFlaskView
 
 
 
