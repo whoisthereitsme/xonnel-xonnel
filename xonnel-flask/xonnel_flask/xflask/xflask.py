@@ -21,7 +21,7 @@ from xflaskview import XFlaskView
 
 
 class XFlask:
-    view = XFlaskView
+    View:XFlaskView = XFlaskView
 
     def __init__(self):
         self.init()
