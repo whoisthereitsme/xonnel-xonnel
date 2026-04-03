@@ -1,24 +1,9 @@
-from .xflask import XFlask
-
-
-
-
-
-
-
-
-
-
+from .xflask import XFlask, XFlaskView
 
 __all__ = [
-    "XFlask"
+    "XFlask",
+    "XFlaskView",
 ]
-
-
-# [!] {+} DOCSPACE __INIT__
-...
-
-# [!] {-}
 
 
 
