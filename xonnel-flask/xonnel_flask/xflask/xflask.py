@@ -22,6 +22,7 @@ from xflaskview import XFlaskView
 
 class XFlask:
     View:XFlaskView = XFlaskView
+    Show = flask.render_template
 
     def __init__(self):
         self.init()
