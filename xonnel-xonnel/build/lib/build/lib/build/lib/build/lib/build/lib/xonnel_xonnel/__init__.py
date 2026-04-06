@@ -33,6 +33,7 @@ from xonnel_stats_vram          import XStatsVram
 from xonnel_stats_win           import XStatsWin
 from xonnel_unpack              import XUnpack
 from xonnel_www                 import XWww
+from xonnel_noize               import XNoize
 
 
 
@@ -65,4 +66,6 @@ __all__ = [
     "XStatsWin",
     "XUnpack",
     "XWww", 
+    "XNoize",
+
 ]
