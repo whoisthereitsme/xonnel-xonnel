@@ -3,7 +3,8 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
-from xnoize import XNoize
+from xonnel_noize import XNoize
+from xonnel_file import XFile
 
 
 ROOT = Path(r"C:\Code\Python\Packages\xonnel-noize\xonnel_noize\xnoize\tests")
@@ -11,10 +12,9 @@ ROOT = Path(r"C:\Code\Python\Packages\xonnel-noize\xonnel_noize\xnoize\tests")
 
 def save_png(data, path):
     arr = np.asarray(data, dtype=np.float32)
-    arr = np.clip(arr, 0.0, 1.0)
-    arr = (arr * 255.0).astype(np.uint8)
+    arr = arr.astype(np.uint8)
     img = Image.fromarray(arr, mode="L")
-    img.save(path)
+    XFile.save(path=path, data=img)
 
 
 def save_obj(data, path, threshold=0.5, voxel_size=1.0):
@@ -92,35 +92,38 @@ def main():
     octs = 6
     pers = 0.5
     lacu = 2.0
-    norm = (0.0, 1.0)
+    nor2 = (0.0, 255.0)
+    nor3 = (0.0, 1.0)
+    of2d = (0.0, 0.0)
+    of3d = (0.0, 0.0, 0.0)
 
-    size2 = (1024, 1024)
-    size3 = (128, 128, 128)
+    size2 = (8192, 8192)
+    size3 = (256, 256, 256)
 
     # ===== BASE =====
-    print("gen perl2"); save_png(XNoize.perl2(size=size2,offset=(0.0,0.0),seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=norm), ROOT/"perl2.png")
-    print("gen simp2"); save_png(XNoize.simp2(size=size2,offset=(0.0,0.0),seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=norm), ROOT/"simp2.png")
-    print("gen worl2"); save_png(XNoize.worl2(size=size2,offset=(0.0,0.0),seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=norm), ROOT/"worl2.png")
+    print("gen perl2"); save_png(XNoize.perl2(size=size2,offset=of2d,seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=nor2), ROOT/"perl2.png")
+    print("gen simp2"); save_png(XNoize.simp2(size=size2,offset=of2d,seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=nor2), ROOT/"simp2.png")
+    print("gen worl2"); save_png(XNoize.worl2(size=size2,offset=of2d,seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=nor2), ROOT/"worl2.png")
 
-    print("gen perl3"); save_obj(XNoize.perl3(size=size3,offset=(0.0,0.0,0.0),seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=norm), ROOT/"perl3.obj")
-    print("gen simp3"); save_obj(XNoize.simp3(size=size3,offset=(0.0,0.0,0.0),seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=norm), ROOT/"simp3.obj")
-    print("gen worl3"); save_obj(XNoize.worl3(size=size3,offset=(0.0,0.0,0.0),seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=norm), ROOT/"worl3.obj")
+    print("gen perl3"); save_obj(XNoize.perl3(size=size3,offset=of3d,seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=nor3), ROOT/"perl3.obj")
+    print("gen simp3"); save_obj(XNoize.simp3(size=size3,offset=of3d,seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=nor3), ROOT/"simp3.obj")
+    print("gen worl3"); save_obj(XNoize.worl3(size=size3,offset=of3d,seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=nor3), ROOT/"worl3.obj")
 
     # ===== RIDGED =====
-    print("gen ridg2"); save_png(XNoize.ridg2(size=size2,offset=(0.0,0.0),seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=norm), ROOT/"ridg2.png")
-    print("gen ridg3"); save_obj(XNoize.ridg3(size=size3,offset=(0.0,0.0,0.0),seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=norm), ROOT/"ridg3.obj")
+    print("gen ridg2"); save_png(XNoize.ridg2(size=size2,offset=of2d,seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=nor2), ROOT/"ridg2.png")
+    print("gen ridg3"); save_obj(XNoize.ridg3(size=size3,offset=of3d,seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=nor3), ROOT/"ridg3.obj")
 
     # ===== BILLOW =====
-    print("gen bill2"); save_png(XNoize.bill2(size=size2,offset=(0.0,0.0),seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=norm), ROOT/"bill2.png")
-    print("gen bill3"); save_obj(XNoize.bill3(size=size3,offset=(0.0,0.0,0.0),seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=norm), ROOT/"bill3.obj")
+    print("gen bill2"); save_png(XNoize.bill2(size=size2,offset=of2d,seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=nor2), ROOT/"bill2.png")
+    print("gen bill3"); save_obj(XNoize.bill3(size=size3,offset=of3d,seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=nor3), ROOT/"bill3.obj")
 
     # ===== TERRACE =====
-    print("gen terr2"); save_png(XNoize.terr2(size=size2,offset=(0.0,0.0),seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=norm), ROOT/"terr2.png")
-    print("gen terr3"); save_obj(XNoize.terr3(size=size3,offset=(0.0,0.0,0.0),seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=norm), ROOT/"terr3.obj")
+    print("gen terr2"); save_png(XNoize.terr2(size=size2,offset=of2d,seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=nor2), ROOT/"terr2.png")
+    print("gen terr3"); save_obj(XNoize.terr3(size=size3,offset=of3d,seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=nor3), ROOT/"terr3.obj")
 
     # ===== CRACK =====
-    print("gen crak2"); save_png(XNoize.crak2(size=size2,offset=(0.0,0.0),seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=norm), ROOT/"crak2.png")
-    print("gen crak3"); save_obj(XNoize.crak3(size=size3,offset=(0.0,0.0,0.0),seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=norm), ROOT/"crak3.obj")
+    print("gen crak2"); save_png(XNoize.crak2(size=size2,offset=of2d,seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=nor2), ROOT/"crak2.png")
+    print("gen crak3"); save_obj(XNoize.crak3(size=size3,offset=of3d,seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=nor3), ROOT/"crak3.obj")
 
     print("done")
 
