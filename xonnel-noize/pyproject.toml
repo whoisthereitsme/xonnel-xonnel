@@ -11,7 +11,14 @@ readme = "README.md"
 requires-python = ">=3.14"
 
 [tool.setuptools.package-data]
-"xonnel_noize" = ["C:\\Code\\Python\\Packages\\xonnel-noize\\xonnel_noize\\xnoize\\xnoize.dll"]
+"xonnel_noize" = [
+    "C:\\Code\\Python\\Packages\\xonnel-noize\\xonnel_noize\\xnoize\\pnoize2.dll",
+    "C:\\Code\\Python\\Packages\\xonnel-noize\\xonnel_noize\\xnoize\\pnoize3.dll",
+    "C:\\Code\\Python\\Packages\\xonnel-noize\\xonnel_noize\\xnoize\\snoize2.dll",
+    "C:\\Code\\Python\\Packages\\xonnel-noize\\xonnel_noize\\xnoize\\snoize3.dll",
+    "C:\\Code\\Python\\Packages\\xonnel-noize\\xonnel_noize\\xnoize\\wnoize2.dll",
+    "C:\\Code\\Python\\Packages\\xonnel-noize\\xonnel_noize\\xnoize\\wnoize3.dll",
+]
 
 [tool.setuptools.packages.find]
 where = ["."]
