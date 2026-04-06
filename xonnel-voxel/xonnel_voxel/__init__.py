@@ -1,14 +1,8 @@
-from .xvoxel.xvoxel import XVoxel
+from .xvoxel import XVoxel
 
 __all__ = [
     "XVoxel"
 ]
-
-
-# [!] {+} DOCSPACE __INIT__
-...
-
-# [!] {-}
 
 
 
