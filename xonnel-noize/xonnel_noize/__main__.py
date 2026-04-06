@@ -218,6 +218,32 @@ def main():
 
     print("done")
 
+    print("gen ridg2")
+    ridg2 = XNoize.ridg2(
+        size=size2,
+        offset=(0.0, 0.0),
+        seed=seed,
+        scale=scale,
+        octs=octs,
+        pers=pers,
+        lacu=lacu,
+        norm=norm,
+    )
+    save_png(ridg2, ROOT / "ridg2.png")
+
+    print("gen ridg3")
+    ridg3 = XNoize.ridg3(
+        size=size3,
+        offset=(0.0, 0.0, 0.0),
+        seed=seed,
+        scale=scale,
+        octs=octs,
+        pers=pers,
+        lacu=lacu,
+        norm=norm,
+    )
+    save_obj_voxels(ridg3, ROOT / "ridg3.obj", threshold=0.5, voxel_size=1.0)
+
 
 if __name__ == "__main__":
     main()
