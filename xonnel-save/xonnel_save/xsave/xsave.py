@@ -50,6 +50,8 @@ class XSave:
 
             if force == "txt":
                 return cls._save_as_txt(path=path, data=data)
+            elif force == "obj":
+                return cls._save_as_obj(path=path, data=data)
             elif force == "json":
                 return cls._save_as_json(path=path, data=data)
             elif force == "xml":
@@ -67,6 +69,9 @@ class XSave:
 
         if ext in (".txt", ".log", ".py", ".lua", ".md", ".html", ".htm", ".css"):
             return cls._save_as_txt(path=path, data=data)
+        
+        elif ext in (".obj",):
+            return cls._save_as_obj(path=path, data=data)
 
         elif ext in (".json",):
             return cls._save_as_json(path=path, data=data)
@@ -143,6 +148,16 @@ class XSave:
             raise ValueError("[ERROR] XSave._save_as_bin() data must be bytes or bytearray")
 
         with path.open("wb") as f:
+            f.write(data)
+
+        return path
+    
+    @classmethod
+    def _save_as_obj(cls, path:Path=None, data=None):
+        if not isinstance(data, str):
+            data = str(data)
+
+        with path.open("w", encoding="utf-8") as f:
             f.write(data)
 
         return path

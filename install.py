@@ -256,7 +256,8 @@ def main(filter="xonnel"):
 
 
 if __name__ == "__main__":
-    main(filter="xonnel-voxel")
+    main(filter="xonnel-save")
+    main(filter="xonnel-file")
     
 
 
