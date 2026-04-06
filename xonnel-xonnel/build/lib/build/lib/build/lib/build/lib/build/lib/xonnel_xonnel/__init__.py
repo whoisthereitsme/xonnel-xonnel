@@ -33,9 +33,41 @@ from xonnel_stats_vram          import XStatsVram
 from xonnel_stats_win           import XStatsWin
 from xonnel_unpack              import XUnpack
 from xonnel_www                 import XWww
-from xonnel_noize               import XNoize
+from xonnel_noize               import XNoize  
+from xonnel_voxel               import XVoxel
 
 
+
+class Xonnel:
+    Cmd: XCmd                   = XCmd
+    Copy: XCopy                 = XCopy
+    Delete: XDelete             = XDelete
+    Emoji: XEmoji               = XEmoji
+    Ensure: XEnsure             = XEnsure
+    Execute: XExecute           = XExecute
+    Exit: XExit                 = XExit
+    File: XFile                 = XFile
+    Git: XGit                   = XGit
+    Ip: XIp                     = XIp
+    Load: XLoad                 = XLoad
+    Move: XMove                 = XMove
+    Pack: XPack                 = XPack
+    Pad: XPad                   = XPad
+    Rand: XRand                 = XRand
+    Save: XSave                 = XSave
+    Stat: XStat                 = XStat
+    Stats: XStats               = XStats
+    StatsCpu: XStatsCpu         = XStatsCpu
+    StatsDisk: XStatsDisk       = XStatsDisk
+    StatsGpu: XStatsGpu         = XStatsGpu
+    StatsNet: XStatsNet         = XStatsNet
+    StatsRam: XStatsRam         = XStatsRam
+    StatsVram: XStatsVram       = XStatsVram
+    StatsWin: XStatsWin         = XStatsWin
+    Unpack: XUnpack             = XUnpack
+    Www: XWww                   = XWww 
+    Noize: XNoize               = XNoize  
+    Voxel: XVoxel               = XVoxel
 
 
 __all__ = [
@@ -67,5 +99,7 @@ __all__ = [
     "XUnpack",
     "XWww", 
     "XNoize",
+    "XVoxel",
+    "Xonnel"
 
 ]
