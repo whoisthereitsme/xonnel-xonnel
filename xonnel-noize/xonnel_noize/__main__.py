@@ -17,7 +17,7 @@ def save_png(data, path):
     img.save(path)
 
 
-def save_obj_voxels(data, path, threshold=0.5, voxel_size=1.0):
+def save_obj(data, path, threshold=0.5, voxel_size=1.0):
     arr = np.asarray(data, dtype=np.float32)
     solid = arr >= threshold
 
@@ -60,59 +60,18 @@ def save_obj_voxels(data, path, threshold=0.5, voxel_size=1.0):
                 z0 = z * s
                 z1 = (z + 1) * s
 
-                # -X
                 if not is_solid(x - 1, y, z):
-                    add_face(
-                        (x0, y0, z0),
-                        (x0, y0, z1),
-                        (x0, y1, z1),
-                        (x0, y1, z0),
-                    )
-
-                # +X
+                    add_face((x0, y0, z0),(x0, y0, z1),(x0, y1, z1),(x0, y1, z0))
                 if not is_solid(x + 1, y, z):
-                    add_face(
-                        (x1, y0, z0),
-                        (x1, y1, z0),
-                        (x1, y1, z1),
-                        (x1, y0, z1),
-                    )
-
-                # -Y
+                    add_face((x1, y0, z0),(x1, y1, z0),(x1, y1, z1),(x1, y0, z1))
                 if not is_solid(x, y - 1, z):
-                    add_face(
-                        (x0, y0, z0),
-                        (x1, y0, z0),
-                        (x1, y0, z1),
-                        (x0, y0, z1),
-                    )
-
-                # +Y
+                    add_face((x0, y0, z0),(x1, y0, z0),(x1, y0, z1),(x0, y0, z1))
                 if not is_solid(x, y + 1, z):
-                    add_face(
-                        (x0, y1, z0),
-                        (x0, y1, z1),
-                        (x1, y1, z1),
-                        (x1, y1, z0),
-                    )
-
-                # -Z
+                    add_face((x0, y1, z0),(x0, y1, z1),(x1, y1, z1),(x1, y1, z0))
                 if not is_solid(x, y, z - 1):
-                    add_face(
-                        (x0, y0, z0),
-                        (x0, y1, z0),
-                        (x1, y1, z0),
-                        (x1, y0, z0),
-                    )
-
-                # +Z
+                    add_face((x0, y0, z0),(x0, y1, z0),(x1, y1, z0),(x1, y0, z0))
                 if not is_solid(x, y, z + 1):
-                    add_face(
-                        (x0, y0, z1),
-                        (x1, y0, z1),
-                        (x1, y1, z1),
-                        (x0, y1, z1),
-                    )
+                    add_face((x0, y0, z1),(x1, y0, z1),(x1, y1, z1),(x0, y1, z1))
 
     with open(path, "w", encoding="utf-8") as f:
         f.write("# xnoize voxel mesh\n")
@@ -138,111 +97,32 @@ def main():
     size2 = (1024, 1024)
     size3 = (128, 128, 128)
 
-    print("gen perl2")
-    perl2 = XNoize.perl2(
-        size=size2,
-        offset=(0.0, 0.0),
-        seed=seed,
-        scale=scale,
-        octs=octs,
-        pers=pers,
-        lacu=lacu,
-        norm=norm,
-    )
-    save_png(perl2, ROOT / "perl2.png")
+    # ===== BASE =====
+    print("gen perl2"); save_png(XNoize.perl2(size=size2,offset=(0.0,0.0),seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=norm), ROOT/"perl2.png")
+    print("gen simp2"); save_png(XNoize.simp2(size=size2,offset=(0.0,0.0),seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=norm), ROOT/"simp2.png")
+    print("gen worl2"); save_png(XNoize.worl2(size=size2,offset=(0.0,0.0),seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=norm), ROOT/"worl2.png")
 
-    print("gen simp2")
-    simp2 = XNoize.simp2(
-        size=size2,
-        offset=(0.0, 0.0),
-        seed=seed,
-        scale=scale,
-        octs=octs,
-        pers=pers,
-        lacu=lacu,
-        norm=norm,
-    )
-    save_png(simp2, ROOT / "simp2.png")
+    print("gen perl3"); save_obj(XNoize.perl3(size=size3,offset=(0.0,0.0,0.0),seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=norm), ROOT/"perl3.obj")
+    print("gen simp3"); save_obj(XNoize.simp3(size=size3,offset=(0.0,0.0,0.0),seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=norm), ROOT/"simp3.obj")
+    print("gen worl3"); save_obj(XNoize.worl3(size=size3,offset=(0.0,0.0,0.0),seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=norm), ROOT/"worl3.obj")
 
-    print("gen worl2")
-    worl2 = XNoize.worl2(
-        size=size2,
-        offset=(0.0, 0.0),
-        seed=seed,
-        scale=scale,
-        octs=octs,
-        pers=pers,
-        lacu=lacu,
-        norm=norm,
-    )
-    save_png(worl2, ROOT / "worl2.png")
+    # ===== RIDGED =====
+    print("gen ridg2"); save_png(XNoize.ridg2(size=size2,offset=(0.0,0.0),seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=norm), ROOT/"ridg2.png")
+    print("gen ridg3"); save_obj(XNoize.ridg3(size=size3,offset=(0.0,0.0,0.0),seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=norm), ROOT/"ridg3.obj")
 
-    print("gen perl3")
-    perl3 = XNoize.perl3(
-        size=size3,
-        offset=(0.0, 0.0, 0.0),
-        seed=seed,
-        scale=scale,
-        octs=octs,
-        pers=pers,
-        lacu=lacu,
-        norm=norm,
-    )
-    save_obj_voxels(perl3, ROOT / "perl3.obj", threshold=0.5, voxel_size=1.0)
+    # ===== BILLOW =====
+    print("gen bill2"); save_png(XNoize.bill2(size=size2,offset=(0.0,0.0),seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=norm), ROOT/"bill2.png")
+    print("gen bill3"); save_obj(XNoize.bill3(size=size3,offset=(0.0,0.0,0.0),seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=norm), ROOT/"bill3.obj")
 
-    print("gen simp3")
-    simp3 = XNoize.simp3(
-        size=size3,
-        offset=(0.0, 0.0, 0.0),
-        seed=seed,
-        scale=scale,
-        octs=octs,
-        pers=pers,
-        lacu=lacu,
-        norm=norm,
-    )
-    save_obj_voxels(simp3, ROOT / "simp3.obj", threshold=0.5, voxel_size=1.0)
+    # ===== TERRACE =====
+    print("gen terr2"); save_png(XNoize.terr2(size=size2,offset=(0.0,0.0),seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=norm), ROOT/"terr2.png")
+    print("gen terr3"); save_obj(XNoize.terr3(size=size3,offset=(0.0,0.0,0.0),seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=norm), ROOT/"terr3.obj")
 
-    print("gen worl3")
-    worl3 = XNoize.worl3(
-        size=size3,
-        offset=(0.0, 0.0, 0.0),
-        seed=seed,
-        scale=scale,
-        octs=octs,
-        pers=pers,
-        lacu=lacu,
-        norm=norm,
-    )
-    save_obj_voxels(worl3, ROOT / "worl3.obj", threshold=0.5, voxel_size=1.0)
+    # ===== CRACK =====
+    print("gen crak2"); save_png(XNoize.crak2(size=size2,offset=(0.0,0.0),seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=norm), ROOT/"crak2.png")
+    print("gen crak3"); save_obj(XNoize.crak3(size=size3,offset=(0.0,0.0,0.0),seed=seed,scale=scale,octs=octs,pers=pers,lacu=lacu,norm=norm), ROOT/"crak3.obj")
 
     print("done")
-
-    print("gen ridg2")
-    ridg2 = XNoize.ridg2(
-        size=size2,
-        offset=(0.0, 0.0),
-        seed=seed,
-        scale=scale,
-        octs=octs,
-        pers=pers,
-        lacu=lacu,
-        norm=norm,
-    )
-    save_png(ridg2, ROOT / "ridg2.png")
-
-    print("gen ridg3")
-    ridg3 = XNoize.ridg3(
-        size=size3,
-        offset=(0.0, 0.0, 0.0),
-        seed=seed,
-        scale=scale,
-        octs=octs,
-        pers=pers,
-        lacu=lacu,
-        norm=norm,
-    )
-    save_obj_voxels(ridg3, ROOT / "ridg3.obj", threshold=0.5, voxel_size=1.0)
 
 
 if __name__ == "__main__":
