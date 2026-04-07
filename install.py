@@ -308,4 +308,4 @@ def main(filter: str = "xonnel"):
 
 
 if __name__ == "__main__":
-    main(filter="xonnel")
+    main(filter="xonnel-walk")

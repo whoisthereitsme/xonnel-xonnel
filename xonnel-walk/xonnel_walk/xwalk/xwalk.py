@@ -13,10 +13,7 @@ class XWalk:
     DEFAULT_EXC = [
         "__pycache__",
         ".git",
-        
-
-
-    ]
+   ]
     def __init__(self, path:str|Path=None, inc:list[str]=None, exc:list[str]=None, deep:int=None):
         self.path = Path(path).resolve() if path is not None else Path.cwd()
         self.inc = inc
