@@ -17,9 +17,9 @@ from pathlib import Path
 
 
 
-
-from xonnel_git import XGit
-from xonnel_cmd import XCmd
+from xonnel_backup      import XBackup
+from xonnel_git         import XGit
+from xonnel_cmd         import XCmd
 
 
 
@@ -306,9 +306,11 @@ class Install:
 
 
 
-def main(filter:str="xonnel"):
-    Install(filter=filter)
-    from xonnel_backup import XBackup
+def main(filter:str="xonnel", iters:int=1):
+    for i in range(iters):
+        print(f"[INFO] [main()] [Starting installation iteration {i+1}/{iters}]")
+        Install(filter=filter)
+    
     XBackup(path=Path(r"C:\Code"), mode="ZIP")
 
 
@@ -316,5 +318,5 @@ def main(filter:str="xonnel"):
 
 
 if __name__ == "__main__":
-    main(filter="xonnel-backup")
+    main(filter="xonnel", iters=3)
     

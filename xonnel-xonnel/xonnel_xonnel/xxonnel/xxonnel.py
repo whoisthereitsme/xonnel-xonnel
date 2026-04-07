@@ -35,6 +35,7 @@ from xonnel_unpack              import XUnpack
 from xonnel_www                 import XWww
 from xonnel_noize               import XNoize  
 from xonnel_voxel               import XVoxel
+from xonnel_backup              import XBackup
 
 
 
@@ -68,38 +69,4 @@ class Xonnel:
     Www: XWww                   = XWww 
     Noize: XNoize               = XNoize  
     Voxel: XVoxel               = XVoxel
-
-
-__all__ = [
-    "XCmd",
-    "XCopy",
-    "XDelete",
-    "XEmoji",
-    "XEnsure",
-    "XExecute",
-    "XExit",
-    "XFile",
-    "XGit",
-    "XIp",
-    "XLoad",
-    "XMove",
-    "XPack",
-    "XPad",
-    "XRand",
-    "XSave",
-    "XStat",
-    "XStats",
-    "XStatsCpu",
-    "XStatsDisk",
-    "XStatsGpu",
-    "XStatsNet",
-    "XStatsRam",
-    "XStatsVram",
-    "XStatsWin",
-    "XUnpack",
-    "XWww", 
-    "XNoize",
-    "XVoxel",
-    "Xonnel"
-
-]
+    Backup: XBackup             = XBackup
