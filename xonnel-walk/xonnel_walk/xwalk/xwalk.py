@@ -2,13 +2,6 @@ from pathlib import Path
 
 
 
-
-
-from xonnel_file import XFile
-
-
-
-
 class XWalk:
     DEFAULT_EXC = [
         "__pycache__",
@@ -46,22 +39,3 @@ class XWalk:
 
 
 
-
-def main():
-    deleted = 0
-    for path in XWalk(path=r"C:\Code", inc=None, exc=None, deep=None):
-        parts = path.parts
-        builds = 0
-        for part in parts:
-            if part == "build":
-                builds += 1
-
-        if builds > 1:
-            XFile.delete(path=path)
-            deleted += 1
-
-    print(f"{path} - deleted: {deleted} nested build folders")
-
-
-if __name__ == "__main__":
-    main()

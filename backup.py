@@ -14,13 +14,15 @@ import time
 
 
 
-def main():
+def backup(src:Path=None):
     t0 = time.time()
-    time_str = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    src = Path(r"C:\Code")
-    tgt = Path(r"D:\Backups\Code") / f"Code_{time_str}"
+    now = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    srcname = src.stem
+    tgtdir = Path(r"D:\Backups")
+    tgtname = srcname + "_" + now
+    tgt = tgtdir / srcname / tgtname
     print(f"Backing up {src} to {tgt}...")
-    XFile.copy(src=src, tgt=tgt)
+    # XFile.copy(src=src, tgt=tgt)
     t1 = time.time()
     t = t1 - t0
     print(f"Backed up {src} to {tgt} in {t:.2f} seconds!")
@@ -28,4 +30,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    backup(src=Path(r"C:\Code"))
