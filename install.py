@@ -303,10 +303,16 @@ class Install:
 
 
 
-def main(filter: str = "xonnel"):
+
+
+
+def main(filter:str="xonnel"):
     Install(filter=filter)
 
 
+
+
+
 if __name__ == "__main__":
-    main(filter="xonnel-walk")
-    main(filter="xonnel-file")
+    main(filter="xonnel-backup")
+    
