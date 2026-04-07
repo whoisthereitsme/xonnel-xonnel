@@ -8,12 +8,14 @@ from .xicosa import XIcosa
 
 
 class XSphere(XIcosa):
-    def __init__(self, size:float=1.0, subs:int=5):
+    def __init__(self, size:float=1.0, subs:int=7):
         super().__init__(size=size)
         self.subs = subs
-        self.subdivide()
 
-    def subdivide(self):
+        self.post()
+        
+
+    def post(self):
         verts = self.verts.astype(np.float64).tolist()
         faces = self.faces.astype(np.int32).tolist()
 
