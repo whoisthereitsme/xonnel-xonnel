@@ -8,9 +8,9 @@ from .xicosa import XIcosa
 
 
 class XSphere(XIcosa):
-    def __init__(self, size:float=1.0, subs:int=3):
+    def __init__(self, size:float=1.0, subs:int=5):
         super().__init__(size=size)
-        self.subs = int(subs)
+        self.subs = subs
         self.subdivide()
 
     def subdivide(self):
