@@ -21,6 +21,7 @@ from xonnel_unpack      import XUnpack
 from xonnel_load        import XLoad
 from xonnel_save        import XSave
 from xonnel_execute     import XExecute
+from xonnel_walk        import XWalk
 
 
 
@@ -64,3 +65,7 @@ class XFile:
     @classmethod
     def execute(cls, path:str|Path=None, args:list[str]=None, cwd:str|Path=None, check:bool=True, mode:str="ERROR"):
         return XExecute(path=path, args=args, cwd=cwd, check=check, mode=mode)
+    
+    @classmethod
+    def walk(cls, path:str|Path=None, inc:str|list[str]=None, exc:str|list[str]=None, deep:int=None):
+        return XWalk(path=path, inc=inc, exc=exc, deep=deep)
