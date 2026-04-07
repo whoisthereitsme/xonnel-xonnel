@@ -89,6 +89,14 @@ class XSphere(XIcosa):
         neg = (s1 <=  eps) and (s2 <=  eps) and (s3 <=  eps)
 
         return pos or neg
+    
+    def facedistsum(self, p: np.ndarray = None, face: np.ndarray = None):
+        a, b, c = [self.verts[i] for i in face]
+        return (
+            np.linalg.norm(p - a)
+            + np.linalg.norm(p - b)
+            + np.linalg.norm(p - c)
+        )
 
     def find(self, lon: float = 0.0, lat: float = 0.0):
         p = self.ll2xyz(lon=lon, lat=lat)
@@ -125,7 +133,7 @@ class XSphere(XIcosa):
 
             for child_idx in range(start, stop):
                 face = faces[child_idx]
-                if self.intria(p=p, face=face):
+                if self.facedistsum(p=p, face=face):
                     found = (child_idx, face)
                     break
 
