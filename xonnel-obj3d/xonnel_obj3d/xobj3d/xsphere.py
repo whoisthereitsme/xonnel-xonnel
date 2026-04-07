@@ -14,6 +14,8 @@ class XSphere(XIcosa):
         self.tiers = {}
 
         self.base_faces = self.faces.copy()
+        self.base_normals = None
+
         self.divide()
 
     def divide(self):
@@ -45,6 +47,7 @@ class XSphere(XIcosa):
         self.faces = np.array(faces, dtype=np.int32)
         self.edges = self.getedges()
         self.object = self.getobject()
+        self.base_normals = self.getbasenormals()
 
     def getcenter(self, verts: list = None, cache: dict = None, p0: int = None, p1: int = None):
         edge = tuple(sorted((int(p0), int(p1))))
@@ -86,23 +89,51 @@ class XSphere(XIcosa):
             raise ValueError("Cannot normalize zero face center")
         return (center / norm) * self.size
 
+    def getbasenormals(self):
+        normals = []
+
+        for face in self.base_faces:
+            a, b, c = [self.verts[i] for i in face]
+            fc = self.facecenter(face=face)
+
+            n1 = np.cross(a, b)
+            n2 = np.cross(b, c)
+            n3 = np.cross(c, a)
+
+            if np.dot(n1, fc) < 0:
+                n1 = -n1
+            if np.dot(n2, fc) < 0:
+                n2 = -n2
+            if np.dot(n3, fc) < 0:
+                n3 = -n3
+
+            normals.append((n1, n2, n3))
+
+        return normals
+
     def intria(self, p: np.ndarray = None, face: np.ndarray = None, eps: float = 1e-12):
         a, b, c = [self.verts[i] for i in face]
-
-        # face center decides the correct sign orientation
-        fc = self.facecenter(face)
+        fc = self.facecenter(face=face)
 
         n1 = np.cross(a, b)
         n2 = np.cross(b, c)
         n3 = np.cross(c, a)
 
-        # orient normals so they point toward the face interior side
         if np.dot(n1, fc) < 0:
             n1 = -n1
         if np.dot(n2, fc) < 0:
             n2 = -n2
         if np.dot(n3, fc) < 0:
             n3 = -n3
+
+        s1 = np.dot(n1, p)
+        s2 = np.dot(n2, p)
+        s3 = np.dot(n3, p)
+
+        return (s1 >= -eps) and (s2 >= -eps) and (s3 >= -eps)
+
+    def intriabase(self, p: np.ndarray = None, faceidx: int = 0, eps: float = 1e-12):
+        n1, n2, n3 = self.base_normals[faceidx]
 
         s1 = np.dot(n1, p)
         s2 = np.dot(n2, p)
@@ -121,12 +152,12 @@ class XSphere(XIcosa):
     def find(self, lon: float = 0.0, lat: float = 0.0):
         p = self.ll2xyz(lon=lon, lat=lat)
 
-        # STEP 1: exact base-face lookup
+        # STEP 1: exact base-face lookup (fast exact, precomputed normals)
         parent_idx = None
         parent_face = None
 
         for i, face in enumerate(self.base_faces):
-            if self.intria(p=p, face=face):
+            if self.intriabase(p=p, faceidx=i):
                 parent_idx = i
                 parent_face = face
                 break
@@ -142,7 +173,7 @@ class XSphere(XIcosa):
             "point": p,
         }
 
-        # STEP 2: descend through subdivision tiers using your fast heuristic
+        # STEP 2: fast child descent by smallest distance-sum
         for tier in range(self.subs):
             faces = self.tiers[tier]
 
