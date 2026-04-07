@@ -4,10 +4,10 @@ if TYPE_CHECKING:
 
 import numpy as np
 
-from .xtetra import XTetra
+from .xicosa import XIcosa
 
 
-class XSphere(XTetra):
+class XSphere(XIcosa):
     def __init__(self, size:float=1.0, subs:int=3):
         super().__init__(size=size)
         self.subs = int(subs)
