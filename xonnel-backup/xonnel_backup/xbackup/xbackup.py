@@ -61,7 +61,7 @@ class XBackup:
         t = 0
         s = 0
         d = 0
-        paths = XFile.walk(path=src, exc=["__pycache__", ".git", ".pyc"])
+        paths = XFile.walk(path=src, exc=["__pycache__", ".git", ".pyc", ".dist", ".temp"])
 
         for path in paths:
             if path.is_file():
@@ -92,7 +92,7 @@ class XBackup:
         tgt = tgtdir / srcname / tgtname
         tempzip = Path(r"C:\Code\.temp\backup.zip")
         tempdir = Path(r"C:\Code\.temp\backup")
-        paths = XFile.walk(path=src, exc=["__pycache__", ".git", ".pyc"])
+        paths = XFile.walk(path=src, exc=["__pycache__", ".git", ".pyc", ".dist", ".temp"])
         for path in paths:
             if path.is_file():
                 relpath = path.relative_to(src)
