@@ -302,12 +302,13 @@ class Install:
 
 
 
-
+from xonnel_backup import XBackup
 
 
 
 def main(filter:str="xonnel"):
     Install(filter=filter)
+    XBackup(path=Path(r"C:\Code"), mode="ZIP")
 
 
 
