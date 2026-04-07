@@ -8,18 +8,19 @@ from .xicosa import XIcosa
 
 
 class XSphere(XIcosa):
-    def __init__(self, size:float=1.0, subs:int=7):
+    def __init__(self, size: float = 1.0, subs: int = 7):
         super().__init__(size=size)
-        self.subs = subs
+        self.subs = int(subs)
+        self.tiers = {}
 
-        self.post()
-        
+        self.base_faces = self.faces.copy()
+        self.divide()
 
-    def post(self):
+    def divide(self):
         verts = self.verts.astype(np.float64).tolist()
         faces = self.faces.astype(np.int32).tolist()
 
-        for _ in range(self.subs):
+        for i in range(self.subs):
             edge_cache = {}
             new_faces = []
 
@@ -38,13 +39,14 @@ class XSphere(XIcosa):
                 ])
 
             faces = new_faces
+            self.tiers[i] = np.array(faces, dtype=np.int32)
 
         self.verts = np.array(verts, dtype=np.float64)
         self.faces = np.array(faces, dtype=np.int32)
         self.edges = self.getedges()
         self.object = self.getobject()
 
-    def getcenter(self, verts:list=None, cache:dict=None, p0:int=None, p1:int=None):
+    def getcenter(self, verts: list = None, cache: dict = None, p0: int = None, p1: int = None):
         edge = tuple(sorted((int(p0), int(p1))))
 
         if edge in cache:
@@ -65,3 +67,81 @@ class XSphere(XIcosa):
         verts.append(center.tolist())
         cache[edge] = idx
         return idx
+
+    def ll2xyz(self, lon: float = 0.0, lat: float = 0.0):
+        lon = np.radians(lon)
+        lat = np.radians(lat)
+
+        x = self.size * np.cos(lat) * np.cos(lon)
+        y = self.size * np.sin(lat)
+        z = self.size * np.cos(lat) * np.sin(lon)
+
+        return np.array([x, y, z], dtype=np.float64)
+
+    def intria(self, p: np.ndarray = None, face: np.ndarray = None, eps: float = 1e-12):
+        a, b, c = [self.verts[i] for i in face]
+
+        s1 = np.dot(np.cross(a, b), p)
+        s2 = np.dot(np.cross(b, c), p)
+        s3 = np.dot(np.cross(c, a), p)
+
+        pos = (s1 >= -eps) and (s2 >= -eps) and (s3 >= -eps)
+        neg = (s1 <=  eps) and (s2 <=  eps) and (s3 <=  eps)
+
+        return pos or neg
+
+    def find(self, lon: float = 0.0, lat: float = 0.0):
+        p = self.ll2xyz(lon=lon, lat=lat)
+
+        # STEP 1: find containing base icosa triangle
+        parent_idx = None
+        parent_face = None
+
+        for i, face in enumerate(self.base_faces):
+            if self.intria(p=p, face=face):
+                parent_idx = i
+                parent_face = face
+                break
+
+        if parent_idx is None:
+            raise ValueError(f"No base triangle found for lon={lon}, lat={lat}")
+
+        result = {
+            "tier": -1,
+            "index": int(parent_idx),
+            "face": np.array(parent_face, dtype=np.int32),
+            "verts": self.verts[np.array(parent_face, dtype=np.int32)],
+            "point": p,
+        }
+
+        # STEP 2: descend through subdivision tiers
+        for tier in range(self.subs):
+            faces = self.tiers[tier]
+
+            start = parent_idx * 4
+            stop = start + 4
+
+            found = None
+
+            for child_idx in range(start, stop):
+                face = faces[child_idx]
+                if self.intria(p=p, face=face):
+                    found = (child_idx, face)
+                    break
+
+            if found is None:
+                raise ValueError(
+                    f"No child triangle found at tier={tier} for lon={lon}, lat={lat}"
+                )
+
+            parent_idx, parent_face = found
+
+            result = {
+                "tier": tier,
+                "index": int(parent_idx),
+                "face": np.array(parent_face, dtype=np.int32),
+                "verts": self.verts[np.array(parent_face, dtype=np.int32)],
+                "point": p,
+            }
+
+        return result
