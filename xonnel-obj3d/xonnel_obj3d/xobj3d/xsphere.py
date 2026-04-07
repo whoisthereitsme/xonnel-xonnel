@@ -78,17 +78,37 @@ class XSphere(XIcosa):
 
         return np.array([x, y, z], dtype=np.float64)
 
+    def facecenter(self, face: np.ndarray = None):
+        a, b, c = [self.verts[i] for i in face]
+        center = (a + b + c) / 3.0
+        norm = np.linalg.norm(center)
+        if norm == 0:
+            raise ValueError("Cannot normalize zero face center")
+        return (center / norm) * self.size
+
     def intria(self, p: np.ndarray = None, face: np.ndarray = None, eps: float = 1e-12):
         a, b, c = [self.verts[i] for i in face]
 
-        s1 = np.dot(np.cross(a, b), p)
-        s2 = np.dot(np.cross(b, c), p)
-        s3 = np.dot(np.cross(c, a), p)
+        # face center decides the correct sign orientation
+        fc = self.facecenter(face)
 
-        pos = (s1 >= -eps) and (s2 >= -eps) and (s3 >= -eps)
-        neg = (s1 <=  eps) and (s2 <=  eps) and (s3 <=  eps)
+        n1 = np.cross(a, b)
+        n2 = np.cross(b, c)
+        n3 = np.cross(c, a)
 
-        return pos or neg
+        # orient normals so they point toward the face interior side
+        if np.dot(n1, fc) < 0:
+            n1 = -n1
+        if np.dot(n2, fc) < 0:
+            n2 = -n2
+        if np.dot(n3, fc) < 0:
+            n3 = -n3
+
+        s1 = np.dot(n1, p)
+        s2 = np.dot(n2, p)
+        s3 = np.dot(n3, p)
+
+        return (s1 >= -eps) and (s2 >= -eps) and (s3 >= -eps)
 
     def facedistsum(self, p: np.ndarray = None, face: np.ndarray = None):
         a, b, c = [self.verts[i] for i in face]
@@ -122,7 +142,7 @@ class XSphere(XIcosa):
             "point": p,
         }
 
-        # STEP 2: descend through subdivision tiers
+        # STEP 2: descend through subdivision tiers using your fast heuristic
         for tier in range(self.subs):
             faces = self.tiers[tier]
 
@@ -133,7 +153,6 @@ class XSphere(XIcosa):
             best_face = None
             best_dist = None
 
-            # first pick the best candidate by smallest distance-sum
             for child_idx in range(start, stop):
                 face = faces[child_idx]
                 dist = self.facedistsum(p=p, face=face)
@@ -143,27 +162,13 @@ class XSphere(XIcosa):
                     best_idx = child_idx
                     best_face = face
 
-            # verify best candidate exactly
-            if best_face is not None and self.intria(p=p, face=best_face):
-                parent_idx = best_idx
-                parent_face = best_face
+            if best_face is None:
+                raise ValueError(
+                    f"No child triangle found at tier={tier} for lon={lon}, lat={lat}"
+                )
 
-            else:
-                # fallback: exact search among the 4 children
-                found = None
-
-                for child_idx in range(start, stop):
-                    face = faces[child_idx]
-                    if self.intria(p=p, face=face):
-                        found = (child_idx, face)
-                        break
-
-                if found is None:
-                    raise ValueError(
-                        f"No child triangle found at tier={tier} for lon={lon}, lat={lat}"
-                    )
-
-                parent_idx, parent_face = found
+            parent_idx = best_idx
+            parent_face = best_face
 
             result = {
                 "tier": tier,
