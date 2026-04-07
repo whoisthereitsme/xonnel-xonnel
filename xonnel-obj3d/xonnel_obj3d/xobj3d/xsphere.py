@@ -89,7 +89,7 @@ class XSphere(XIcosa):
         neg = (s1 <=  eps) and (s2 <=  eps) and (s3 <=  eps)
 
         return pos or neg
-    
+
     def facedistsum(self, p: np.ndarray = None, face: np.ndarray = None):
         a, b, c = [self.verts[i] for i in face]
         return (
@@ -101,7 +101,7 @@ class XSphere(XIcosa):
     def find(self, lon: float = 0.0, lat: float = 0.0):
         p = self.ll2xyz(lon=lon, lat=lat)
 
-        # STEP 1: find containing base icosa triangle
+        # STEP 1: exact base-face lookup
         parent_idx = None
         parent_face = None
 
@@ -129,20 +129,41 @@ class XSphere(XIcosa):
             start = parent_idx * 4
             stop = start + 4
 
-            found = None
+            best_idx = None
+            best_face = None
+            best_dist = None
 
+            # first pick the best candidate by smallest distance-sum
             for child_idx in range(start, stop):
                 face = faces[child_idx]
-                if self.facedistsum(p=p, face=face):
-                    found = (child_idx, face)
-                    break
+                dist = self.facedistsum(p=p, face=face)
 
-            if found is None:
-                raise ValueError(
-                    f"No child triangle found at tier={tier} for lon={lon}, lat={lat}"
-                )
+                if best_dist is None or dist < best_dist:
+                    best_dist = dist
+                    best_idx = child_idx
+                    best_face = face
 
-            parent_idx, parent_face = found
+            # verify best candidate exactly
+            if best_face is not None and self.intria(p=p, face=best_face):
+                parent_idx = best_idx
+                parent_face = best_face
+
+            else:
+                # fallback: exact search among the 4 children
+                found = None
+
+                for child_idx in range(start, stop):
+                    face = faces[child_idx]
+                    if self.intria(p=p, face=face):
+                        found = (child_idx, face)
+                        break
+
+                if found is None:
+                    raise ValueError(
+                        f"No child triangle found at tier={tier} for lon={lon}, lat={lat}"
+                    )
+
+                parent_idx, parent_face = found
 
             result = {
                 "tier": tier,
