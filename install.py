@@ -318,5 +318,5 @@ def main(filter:str="xonnel", iters:int=1):
 
 
 if __name__ == "__main__":
-    main(filter="xonnel", iters=3)
+    main(filter="xonnel-obj3d")
     
