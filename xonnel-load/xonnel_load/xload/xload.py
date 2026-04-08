@@ -4,6 +4,7 @@ if TYPE_CHECKING:
 
 import json
 import pickle
+import ctypes
 import xml.etree.ElementTree as ET
 
 from pathlib import Path
@@ -42,6 +43,8 @@ class XLoad:
                 return cls._load_as_img(path=path)
             elif force == "bin":
                 return cls._load_as_bin(path=path)
+            elif force == "dll":
+                return cls._load_as_dll(path=path)
             else:
                 raise ValueError(f"[ERROR] XLoad._load() Unsupported force mode: {force}")
 
@@ -61,6 +64,9 @@ class XLoad:
 
         elif ext in (".png", ".jpg", ".jpeg", ".webp", ".bmp", ".gif"):
             return cls._load_as_img(path=path)
+        
+        elif ext in (".dll",):
+            return cls._load_as_dll(path=path)
 
         else:
             return cls._load_as_bin(path=path)
@@ -93,7 +99,9 @@ class XLoad:
         with path.open("rb") as f:
             return f.read()
 
-
+    @classmethod
+    def _load_as_dll(cls, path:Path=None):
+        return ctypes.CDLL(str(path))
 
 
 

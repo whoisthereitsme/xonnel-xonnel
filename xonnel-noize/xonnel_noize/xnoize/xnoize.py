@@ -3,87 +3,127 @@ if TYPE_CHECKING:
     ...
 
 
-# base noize 
-from .pnoize2 import PNoize2
-from .pnoize3 import PNoize3
-from .snoize2 import SNoize2
-from .snoize3 import SNoize3
-from .wnoize2 import WNoize2
-from .wnoize3 import WNoize3
 
-# derrived noize from base noize
-from .rnoize2 import RNoize2
-from .rnoize3 import RNoize3
-from .bnoize2 import BNoize2
-from .bnoize3 import BNoize3
-from .tnoize2 import TNoize2
-from .tnoize3 import TNoize3
-from .cnoize2 import CNoize2
-from .cnoize3 import CNoize3
+
+import time
+from math import sin, cos, tan, pi
+
+class Noize:
+    BASE = {
+        "PERLIN": dll("perlin.dll"),
+        "SIMPLEX": dll("simplex.dll"),
+        "WORLEY": dll("worley.dll")
+    }
+
+    POST = {
+        "FLIP":         lambda noize=None, weight=1.0: (weight * (1-noize)),
+        "INV":          lambda noize=None, weight=1.0: (weight * (1/noize)),
+        "NEG":          lambda noize=None, weight=1.0: (weight * -noize),
+        "POS":          lambda noize=None, weight=1.0: (weight *  noize),
+        "POW":          lambda noize=None, weight=1.0: (weight *  noize**2),
+        "EXP":          lambda noize=None, weight=1.0: (weight *  2**noize),
+        "ABS":          lambda noize=None, weight=1.0: (weight *  abs(noize)),
+        "SIN":          lambda noize=None, weight=1.0: (weight *  sin(noize)),
+        "COS":          lambda noize=None, weight=1.0: (weight *  cos(noize)),
+        "TAN":          lambda noize=None, weight=1.0: (weight *  tan(noize)),
+        "INVPOW":       lambda noize=None, weight=1.0: (weight *  1/(noize**2)),
+        "INVEXP":       lambda noize=None, weight=1.0: (weight *  1/(2**noize)),
+        "INVSIN":       lambda noize=None, weight=1.0: (weight *  1/sin(noize)),
+        "INVCOS":       lambda noize=None, weight=1.0: (weight *  1/cos(noize)),
+        "INVTAN":       lambda noize=None, weight=1.0: (weight *  1/tan(noize)),
+    }
+
+
+    def __init__(self, size:int|tuple[int]=None, repeat:int|tuple[int]=None, offset:float|tuple[float]=None, scale:float|tuple[float]=None, octs:int=None, pers:float=None, lacu:float=None, seed:int=None, perlin:float=None, simplex:float=None, worley:float=None, post:list[str]=None, norm:tuple=None):
+        self.size:tuple   = self.get3d(value=size,   fill=1)
+        self.repeat:tuple = self.get3d(value=repeat, fill=2**16-1)
+        self.offset:tuple = self.get3d(value=offset, fill=0.0)
+        self.scale:tuple  = self.get3d(value=scale,  fill=1.0)
+        self.octs:int     = self.getocts(octs=octs)
+        self.pers:float   = self.getpers(pers=pers)
+        self.lacu:float   = self.getlacu(lacu=lacu)
+        self.seed:int     = self.getseed(seed=seed)
+
+        self.weight:dict  = self.getweight(perlin=perlin, simplex=simplex, worley=worley)
+        self.post:list    = self.getpost(post=post)
+        self.norm:tuple   = self.getnorm(norm=norm)
+
+    def getweight(self, perlin:float=None, simplex:float=None, worley:float=None):
+        perlin  = 0.0 if perlin  is None else perlin
+        simplex = 0.0 if simplex is None else simplex
+        worley  = 0.0 if worley  is None else worley
+        total = perlin + simplex + worley
+        if total == 0.0:
+            return {"PERLIN": 1.0, "SIMPLEX": None, "WORLEY": None}
+        return {
+            "PERLIN":  perlin  / total,
+            "SIMPLEX": simplex / total,
+            "WORLEY":  worley  / total
+        }
+
+    def getseed(self, seed:int=None):
+        if seed is None:
+            return int(time.time())
+        return seed
+    
+    def getpost(self, post:list[str]=None):
+        if post is None:
+            return []
+        return [Noize.POST.get(p.upper(), lambda noize=None: noize) for p in post]
+    
+    def getocts(self, octs:int=None):
+        if octs is None:
+            return 1
+        else:
+            return int(octs)
+        
+    def getpers(self, pers:float=None):
+        if pers is None:
+            return 0.5
+        else:
+            return float(pers)
+        
+    def getlacu(self, lacu:float=None):
+        if lacu is None:
+            return 2.0
+        else:
+            return float(lacu)
+        
+    def getnorm(self, norm:tuple=None):
+        if norm is None:
+            return (0.0, 1.0)
+        else:
+            return tuple(norm)
+
+    def get3d(self, value:float|int|tuple[int]=None, fill=1):
+        if value is None:
+            return (fill,        fill,        fill)
+        if isinstance(value, int):
+            return (value,       fill,        fill)
+        if len(value) == 1:
+            return (value[0],    fill,        fill)
+        if len(value) == 2:
+            return (value[0],    value[1],    fill)
+        if len(value) == 3:
+            return value
+        raise ValueError(f"Invalid value for get3d: {value}")
+        
+
 
 
 class XNoize:
-    perlin2 = PNoize2
-    perlin3 = PNoize3
-    simplex2 = SNoize2
-    simplex3 = SNoize3
-    worley2 = WNoize2
-    worley3 = WNoize3
-    ridged2 = RNoize2
-    ridged3 = RNoize3
+    DLL = None  
 
-    @staticmethod
-    def perl2(size=(512,512), offset=(0.0,0.0), seed=0, scale=64.0, octs=1, pers=0.5, lacu=2.0, norm=(0.0,1.0)):
-        return PNoize2(size=size, offset=offset, seed=seed, scale=scale, octs=octs, pers=pers, lacu=lacu, norm=norm).noize
+    def __init__(self, cfg:Noize=None):
+        self.cfg = cfg
 
-    @staticmethod
-    def perl3(size=(64,64,64), offset=(0.0,0.0,0.0), seed=0, scale=64.0, octs=1, pers=0.5, lacu=2.0, norm=(0.0,1.0)):
-        return PNoize3(size=size, offset=offset, seed=seed, scale=scale, octs=octs, pers=pers, lacu=lacu, norm=norm).noize
+        self.init()
 
-    @staticmethod
-    def simp2(size=(512,512), offset=(0.0,0.0), seed=0, scale=64.0, octs=1, pers=0.5, lacu=2.0, norm=(0.0,1.0)):
-        return SNoize2(size=size, offset=offset, seed=seed, scale=scale, octs=octs, pers=pers, lacu=lacu, norm=norm).noize
+    def init(self):
+        if self.cfg is None:
+            self.cfg = Noize()
 
-    @staticmethod
-    def simp3(size=(64,64,64), offset=(0.0,0.0,0.0), seed=0, scale=64.0, octs=1, pers=0.5, lacu=2.0, norm=(0.0,1.0)):
-        return SNoize3(size=size, offset=offset, seed=seed, scale=scale, octs=octs, pers=pers, lacu=lacu, norm=norm).noize
-
-    @staticmethod
-    def worl2(size=(512,512), offset=(0.0,0.0), seed=0, scale=64.0, octs=1, pers=0.5, lacu=2.0, norm=(0.0,1.0)):
-        return WNoize2(size=size, offset=offset, seed=seed, scale=scale, octs=octs, pers=pers, lacu=lacu, norm=norm).noize
-
-    @staticmethod
-    def worl3(size=(64,64,64), offset=(0.0,0.0,0.0), seed=0, scale=64.0, octs=1, pers=0.5, lacu=2.0, norm=(0.0,1.0)):
-        return WNoize3(size=size, offset=offset, seed=seed, scale=scale, octs=octs, pers=pers, lacu=lacu, norm=norm).noize
-
-    @staticmethod
-    def ridg2(size=(512,512), offset=(0.0,0.0), seed=0, scale=64.0, octs=1, pers=0.5, lacu=2.0, norm=(0.0,1.0)):
-        return RNoize2(size=size, offset=offset, seed=seed, scale=scale, octs=octs, pers=pers, lacu=lacu, norm=norm).noize
-
-    @staticmethod
-    def ridg3(size=(64,64,64), offset=(0.0,0.0,0.0), seed=0, scale=64.0, octs=1, pers=0.5, lacu=2.0, norm=(0.0,1.0)):
-        return RNoize3(size=size, offset=offset, seed=seed, scale=scale, octs=octs, pers=pers, lacu=lacu, norm=norm).noize
-
-    @classmethod
-    def bill2(cls, size=(512,512), offset=(0.0,0.0), seed=0, scale=64.0, octs=1, pers=0.5, lacu=2.0, norm=(0.0,1.0)):
-        return BNoize2(size=size, offset=offset, seed=seed, scale=scale, octs=octs, pers=pers, lacu=lacu, norm=norm).noize
-
-    @classmethod
-    def bill3(cls, size=(128,128,128), offset=(0.0,0.0,0.0), seed=0, scale=64.0, octs=1, pers=0.5, lacu=2.0, norm=(0.0,1.0)):
-        return BNoize3(size=size, offset=offset, seed=seed, scale=scale, octs=octs, pers=pers, lacu=lacu, norm=norm).noize
-
-    @classmethod
-    def terr2(cls, size=(512,512), offset=(0.0,0.0), seed=0, scale=64.0, octs=1, pers=0.5, lacu=2.0, norm=(0.0,1.0)):
-        return TNoize2(size=size, offset=offset, seed=seed, scale=scale, octs=octs, pers=pers, lacu=lacu, norm=norm).noize
-
-    @classmethod
-    def terr3(cls, size=(128,128,128), offset=(0.0,0.0,0.0), seed=0, scale=64.0, octs=1, pers=0.5, lacu=2.0, norm=(0.0,1.0)):
-        return TNoize3(size=size, offset=offset, seed=seed, scale=scale, octs=octs, pers=pers, lacu=lacu, norm=norm).noize
-
-    @classmethod
-    def crak2(cls, size=(512,512), offset=(0.0,0.0), seed=0, scale=64.0, octs=1, pers=0.5, lacu=2.0, norm=(0.0,1.0)):
-        return CNoize2(size=size, offset=offset, seed=seed, scale=scale, octs=octs, pers=pers, lacu=lacu, norm=norm).noize
-
-    @classmethod
-    def crak3(cls, size=(128,128,128), offset=(0.0,0.0,0.0), seed=0, scale=64.0, octs=1, pers=0.5, lacu=2.0, norm=(0.0,1.0)):
-        return CNoize3(size=size, offset=offset, seed=seed, scale=scale, octs=octs, pers=pers, lacu=lacu, norm=norm).noize
+        self.PNOIZE = self.getpnoize()
+        self.SNOIZE = self.getsnoize()
+        self.WNOIZE = self.getwnoize()
+        self.RNOIZE = self.getrnoize()
